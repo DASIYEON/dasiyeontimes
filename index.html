@@ -490,8 +490,7 @@
     } catch(e) {}
   })();
   document.querySelectorAll('.nav-inner a').forEach(a => {
-    a.addEventListener('click', function(e){
-      e.preventDefault();
+    a.addEventListener('click', function(){
       document.querySelectorAll('.nav-inner a').forEach(x => x.classList.remove('active'));
       this.classList.add('active');
     });
