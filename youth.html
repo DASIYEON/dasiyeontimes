@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>청소년보호정책 — 다시연 타임즈</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--cream:#FAF8F4;--navy:#1C2B4A;--gold:#A67825;--text:#1A1A1A;--text-mid:#4A4640;--text-light:#8A857E;--white:#FFFFFF;--border:rgba(28,43,74,0.10);--border-mid:rgba(28,43,74,0.18);--serif:'Noto Serif KR',Georgia,serif;--sans:'Noto Sans KR',sans-serif;}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:var(--sans);background:var(--cream);color:var(--text);line-height:1.8;-webkit-font-smoothing:antialiased;}
+    a{text-decoration:none;color:inherit;}
+    .site-header{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
+    .header-top{max-width:1080px;margin:0 auto;padding:16px 32px 12px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;border-bottom:1px solid var(--border);}
+    .header-back{font-size:12px;color:var(--text-light);display:flex;align-items:center;gap:6px;transition:color 0.2s;}
+    .header-back:hover{color:var(--navy);}
+    .logo-text{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--navy);letter-spacing:-1px;display:block;line-height:1;text-align:center;}
+    .logo-text em{font-style:normal;color:var(--gold);}
+    .logo-tagline{font-size:9px;color:var(--text-light);letter-spacing:3px;text-transform:uppercase;display:block;margin-top:3px;text-align:center;}
+    .site-nav{background:var(--white);border-bottom:2px solid var(--navy);}
+    .nav-inner{max-width:1080px;margin:0 auto;padding:0 32px;display:flex;justify-content:center;}
+    .nav-inner a{padding:10px 20px;font-size:13px;font-weight:500;color:var(--text-mid);border-bottom:3px solid transparent;transition:all 0.2s;margin-bottom:-2px;}
+    .nav-inner a:hover{color:var(--navy);border-bottom-color:var(--navy);}
+    .page-hero{background:var(--navy);padding:56px 32px 48px;text-align:center;}
+    .page-hero-label{font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:12px;display:block;}
+    .page-hero h1{font-family:var(--serif);font-size:34px;font-weight:700;color:var(--white);margin-bottom:12px;}
+    .page-hero p{font-size:14px;color:rgba(255,255,255,0.5);max-width:520px;margin:0 auto;line-height:1.8;}
+    .hero-divider{width:40px;height:2px;background:var(--gold);margin:20px auto 0;}
+    .wrap{max-width:800px;margin:0 auto;padding:0 32px;}
+    .doc-body{padding:56px 0 80px;}
+    .responsible-box{background:var(--navy);padding:28px 32px;margin-bottom:40px;}
+    .responsible-info h3{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--white);margin-bottom:6px;}
+    .responsible-info p{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;}
+    .responsible-info strong{color:rgba(255,255,255,0.8);}
+    .doc-chapter{margin-bottom:44px;}
+    .doc-chapter-title{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--navy);margin-bottom:14px;padding-bottom:11px;border-bottom:2px solid var(--navy);display:flex;align-items:center;gap:10px;}
+    .chapter-num{background:var(--navy);color:var(--white);font-family:var(--sans);font-size:11px;font-weight:500;padding:3px 10px;letter-spacing:0.5px;}
+    .doc-text{font-size:14px;color:var(--text-mid);line-height:2;margin-bottom:12px;}
+    .doc-list{padding-left:0;list-style:none;margin-bottom:12px;}
+    .doc-list li{font-size:14px;color:var(--text-mid);line-height:1.9;padding:7px 0 7px 18px;border-bottom:1px dashed var(--border);position:relative;}
+    .doc-list li:last-child{border-bottom:none;}
+    .doc-list li::before{content:'▪';position:absolute;left:0;color:var(--gold);font-size:10px;top:10px;}
+    .harmful-box{background:var(--white);border:1px solid var(--border-mid);padding:20px 24px;margin:16px 0;}
+    .harmful-box h4{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;}
+    .harmful-box ul{list-style:disc;padding-left:18px;}
+    .harmful-box ul li{font-size:13px;color:var(--text-mid);line-height:1.8;margin-bottom:4px;}
+    .doc-notice{background:var(--white);border:1px solid var(--border-mid);border-left:3px solid var(--gold);padding:16px 20px;margin-top:32px;font-size:13px;color:var(--text-light);line-height:1.8;}
+    .site-footer{background:var(--navy);}
+    .footer-inner{max-width:1080px;margin:0 auto;padding:32px 32px 20px;display:grid;grid-template-columns:1.8fr 1fr 1fr;gap:40px;border-bottom:1px solid rgba(255,255,255,0.07);}
+    .footer-brand .logo-text{font-size:18px;color:var(--white);display:block;margin-bottom:8px;}
+    .footer-brand .logo-text em{color:#C89A40;}
+    .footer-brand p{font-size:12px;color:rgba(255,255,255,0.32);line-height:1.9;}
+    .footer-col h4{font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.45);text-transform:uppercase;margin-bottom:12px;}
+    .footer-col a{display:block;font-size:12px;color:rgba(255,255,255,0.32);margin-bottom:8px;transition:color 0.15s;}
+    .footer-col a:hover{color:rgba(255,255,255,0.75);}
+    .footer-legal{max-width:1080px;margin:0 auto;padding:14px 32px;font-size:11px;color:rgba(255,255,255,0.20);line-height:2;border-bottom:1px solid rgba(255,255,255,0.05);}
+    .footer-legal strong{color:rgba(255,255,255,0.38);}
+    .footer-bottom{max-width:1080px;margin:0 auto;padding:12px 32px;display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,0.20);}
+    .footer-bottom a{color:rgba(255,255,255,0.26);margin-left:16px;}
+    .footer-bottom a:hover{color:rgba(255,255,255,0.7);}
+
+    @media(max-width:860px){
+      .footer-inner{grid-template-columns:1fr 1fr;}
+      .doc-chapter-title{font-size:15px;}
+    }
+    @media(max-width:600px){.header-top{grid-template-columns:auto 1fr;padding:12px 20px;}.wrap{padding:0 20px;}.responsible-box{grid-template-columns:1fr;text-align:center;}.footer-inner{grid-template-columns:1fr;gap:20px;padding:24px 20px 16px;}.footer-legal,.footer-bottom{padding-left:20px;padding-right:20px;}.nav-inner{overflow-x:auto;justify-content:flex-start;padding:0 20px;}}
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-top">
+    <a href="index.html" class="header-back">← 홈으로</a>
+    <div><a href="index.html"><span class="logo-text">다시연 <em>타임즈</em></span><span class="logo-tagline">Dasiyeon Times</span></a></div>
+    <div></div>
+  </div>
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a href="index.html">전체</a>      <a href="category.html?cat=마음">마음</a>
+      <a href="category.html?cat=경영">경영</a>
+      <a href="category.html?cat=AI">AI</a>
+      <a href="category.html?cat=컬럼">컬럼</a><a href="about.html">소개</a>
+    </div>
+  </nav>
+</header>
+
+<div class="page-hero">
+  <span class="page-hero-label">Youth Protection Policy</span>
+  <h1>청소년보호정책</h1>
+  <p>다시연 타임즈는 「청소년보호법」에 따라<br>청소년을 유해 환경으로부터 보호하기 위한 정책을 시행합니다.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="doc-body">
+<div class="wrap">
+
+  <!-- 청소년보호책임자 -->
+  <div class="responsible-box">
+    <div class="responsible-info">
+      <h3>청소년보호책임자</h3>
+      <p>
+        <strong>성명:</strong> 최형규 &nbsp;|&nbsp;
+        <strong>직책:</strong> 발행인<br>
+        <strong>전화:</strong> 070-8095-2012 &nbsp;|&nbsp;<strong>팩스:</strong> 0505-075-3779 &nbsp;|&nbsp;
+        <strong>이메일:</strong> nstar1109@gmail.com
+      </p>
+    </div>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 1 조</span> 청소년보호정책의 목적</div>
+    <p class="doc-text">다시연 타임즈(이하 "본지")는 「청소년보호법」 및 「정보통신망 이용촉진 및 정보보호 등에 관한 법률」에 의거하여 청소년에게 유해한 정보가 유통되지 않도록 노력하며, 청소년이 건전하고 안전한 인터넷 환경에서 본지 콘텐츠를 이용할 수 있도록 이 정책을 시행합니다.</p>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 2 조</span> 유해 정보 차단 기준</div>
+    <p class="doc-text">본지는 다음에 해당하는 정보를 유해 정보로 규정하고, 이를 게재하지 않습니다.</p>
+    <div class="harmful-box">
+      <h4>게재 금지 유해 정보</h4>
+      <ul>
+        <li>청소년의 성을 상품화하거나 성적 호기심을 자극하는 선정적 내용</li>
+        <li>폭력적이고 잔인하며 공포심을 조장하는 내용</li>
+        <li>마약·알코올·도박 등 불법 행위를 조장하거나 미화하는 내용</li>
+        <li>자살·자해를 미화하거나 방법을 구체적으로 안내하는 내용</li>
+        <li>타인에 대한 혐오·차별·비하를 조장하는 내용</li>
+        <li>개인정보 침해나 사이버 범죄를 유발할 수 있는 내용</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 3 조</span> 청소년보호를 위한 편집 원칙</div>
+    <ul class="doc-list">
+      <li>심리·정신건강 관련 기사 작성 시, 자살·자해 보도 권고 기준을 준수하고 전문기관 상담 정보를 함께 제공한다.</li>
+      <li>청소년이 피해자인 사건 보도 시 신원이 노출되지 않도록 철저히 익명 처리한다.</li>
+      <li>광고 콘텐츠 게재 시 청소년에게 유해한 광고를 배제한다.</li>
+      <li>청소년의 심리·정서 발달에 부정적 영향을 미칠 수 있는 콘텐츠는 편집인의 사전 검토를 거친다.</li>
+    </ul>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 4 조</span> 청소년보호책임자의 역할</div>
+    <ul class="doc-list">
+      <li>청소년 유해 정보의 게재 여부를 사전에 검토하고 판단한다.</li>
+      <li>청소년 유해 정보 게재 요청이 있는 경우 이를 거부하거나 수정하도록 조치한다.</li>
+      <li>청소년 보호와 관련한 민원을 접수하고 처리한다.</li>
+      <li>청소년보호 관련 법령의 변경 사항을 모니터링하고 정책에 반영한다.</li>
+    </ul>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 5 조</span> 유해 정보 신고 및 처리</div>
+    <p class="doc-text">독자 여러분께서 본지에서 청소년 유해 정보를 발견하신 경우, 아래 연락처로 신고하여 주시기 바랍니다. 신고 접수 즉시 확인하여 24시간 이내에 처리 결과를 통보해 드리겠습니다.</p>
+    <ul class="doc-list">
+      <li>이메일 신고: nstar1109@gmail.com (제목: [청소년유해정보신고])</li>
+      <li>전화 신고: 070-8095-2012</li>
+      <li>방송통신심의위원회: www.kocsc.or.kr / 1377</li>
+      <li>청소년보호위원회: www.mogef.go.kr / 1366</li>
+    </ul>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 6 조</span> 청소년 독자를 위한 안내</div>
+    <p class="doc-text">다시연 타임즈는 심리·회복·성장을 주제로 하는 미디어로서, 청소년 독자들이 건강한 마음과 올바른 가치관을 형성하는 데 도움이 되는 콘텐츠를 제공하고자 노력합니다.</p>
+    <ul class="doc-list">
+      <li>심리적 어려움을 겪고 있는 청소년은 청소년상담복지센터(1388)에 도움을 요청하시기 바랍니다.</li>
+      <li>인터넷 이용 과정에서 불쾌하거나 유해한 정보를 접한 경우 보호자 또는 교사에게 알리세요.</li>
+      <li>본지 콘텐츠 중 이해가 어려운 전문적 내용은 보호자와 함께 읽기를 권장합니다.</li>
+    </ul>
+  </div>
+
+  <div class="doc-notice">
+    본 청소년보호정책은 2026년 1월 1일부터 시행합니다.<br>
+    청소년보호책임자: 최형규 &nbsp;|&nbsp; 문의: nstar1109@gmail.com
+  </div>
+
+</div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand"><span class="logo-text">다시연 <em>타임즈</em></span><p>회복과 성장의 미디어<br>마음·경영·AI·삶의 통찰을 전합니다.</p></div>
+        <div class="footer-col">
+      <h4>카테고리</h4>
+      <a href="category.html?cat=마음">마음</a>
+      <a href="category.html?cat=경영">경영</a>
+      <a href="category.html?cat=AI">AI</a>
+      <a href="category.html?cat=컬럼">컬럼</a>
+    </div>
+    <div class="footer-col"><h4>미디어</h4><a href="about.html">소개</a><a href="ethics.html">취재윤리강령</a><a href="privacy.html">개인정보처리방침</a><a href="youth.html">청소년보호정책</a></div>
+  </div>
+  <div class="footer-legal">
+    <strong>신문명:</strong> 다시연 타임즈 &nbsp;|&nbsp;<strong>등록번호:</strong> 등록신청중 &nbsp;|&nbsp;<strong>발행인:</strong> 최형규 &nbsp;|&nbsp;<strong>편집인:</strong> 최형규 &nbsp;|&nbsp;<strong>청소년보호책임자:</strong> 최형규<br>
+    <strong>발행소:</strong> 경기도 부천시 신흥로223 신중동역랜드마크푸르지오시티 102동 1218호 &nbsp;|&nbsp;<strong>전화:</strong> 070-8095-2012 &nbsp;|&nbsp;<strong>팩스:</strong> 0505-075-3779 &nbsp;|&nbsp;<strong>이메일:</strong> nstar1109@gmail.com<br>
+    본 인터넷신문은 「신문 등의 진흥에 관한 법률」에 의거하여 등록된 인터넷신문입니다.
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 다시연 타임즈. All rights reserved.</span>
+    <div><a href="privacy.html">개인정보처리방침</a><a href="terms.html">이용약관</a><a href="youth.html">청소년보호정책</a></div>
+  </div>
+</footer>
+</body>
+</html>

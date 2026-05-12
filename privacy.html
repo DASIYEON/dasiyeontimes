@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>개인정보처리방침 — 다시연 타임즈</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--cream:#FAF8F4;--navy:#1C2B4A;--gold:#A67825;--text:#1A1A1A;--text-mid:#4A4640;--text-light:#8A857E;--white:#FFFFFF;--border:rgba(28,43,74,0.10);--border-mid:rgba(28,43,74,0.18);--serif:'Noto Serif KR',Georgia,serif;--sans:'Noto Sans KR',sans-serif;}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:var(--sans);background:var(--cream);color:var(--text);line-height:1.8;-webkit-font-smoothing:antialiased;}
+    a{text-decoration:none;color:inherit;}
+    .site-header{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
+    .header-top{max-width:1080px;margin:0 auto;padding:16px 32px 12px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;border-bottom:1px solid var(--border);}
+    .header-back{font-size:12px;color:var(--text-light);display:flex;align-items:center;gap:6px;transition:color 0.2s;}
+    .header-back:hover{color:var(--navy);}
+    .logo-text{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--navy);letter-spacing:-1px;display:block;line-height:1;text-align:center;}
+    .logo-text em{font-style:normal;color:var(--gold);}
+    .logo-tagline{font-size:9px;color:var(--text-light);letter-spacing:3px;text-transform:uppercase;display:block;margin-top:3px;text-align:center;}
+    .site-nav{background:var(--white);border-bottom:2px solid var(--navy);}
+    .nav-inner{max-width:1080px;margin:0 auto;padding:0 32px;display:flex;justify-content:center;}
+    .nav-inner a{padding:10px 20px;font-size:13px;font-weight:500;color:var(--text-mid);border-bottom:3px solid transparent;transition:all 0.2s;margin-bottom:-2px;}
+    .nav-inner a:hover{color:var(--navy);border-bottom-color:var(--navy);}
+    .page-hero{background:var(--navy);padding:56px 32px 48px;text-align:center;}
+    .page-hero-label{font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:12px;display:block;}
+    .page-hero h1{font-family:var(--serif);font-size:34px;font-weight:700;color:var(--white);margin-bottom:12px;}
+    .page-hero p{font-size:14px;color:rgba(255,255,255,0.5);max-width:520px;margin:0 auto;line-height:1.8;}
+    .hero-divider{width:40px;height:2px;background:var(--gold);margin:20px auto 0;}
+    .wrap{max-width:800px;margin:0 auto;padding:0 32px;}
+    .doc-body{padding:56px 0 80px;}
+    .effective-date{background:var(--white);border:1px solid var(--border-mid);padding:14px 20px;margin-bottom:36px;font-size:13px;color:var(--text-mid);display:flex;align-items:center;gap:8px;}
+    .effective-date strong{color:var(--navy);}
+    .doc-chapter{margin-bottom:44px;}
+    .doc-chapter-title{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--navy);margin-bottom:14px;padding-bottom:11px;border-bottom:2px solid var(--navy);display:flex;align-items:center;gap:10px;}
+    .chapter-num{background:var(--navy);color:var(--white);font-family:var(--sans);font-size:11px;font-weight:500;padding:3px 10px;letter-spacing:0.5px;}
+    .doc-text{font-size:14px;color:var(--text-mid);line-height:2;margin-bottom:12px;}
+    .doc-list{padding-left:0;list-style:none;margin-bottom:12px;}
+    .doc-list li{font-size:14px;color:var(--text-mid);line-height:1.9;padding:7px 0 7px 18px;border-bottom:1px dashed var(--border);position:relative;}
+    .doc-list li:last-child{border-bottom:none;}
+    .doc-list li::before{content:'▪';position:absolute;left:0;color:var(--gold);font-size:10px;top:10px;}
+    .info-table{width:100%;border-collapse:collapse;margin-bottom:16px;}
+    .info-table th{padding:11px 16px;text-align:left;font-size:12px;font-weight:500;color:var(--text-light);background:#F8F6F2;border:1px solid var(--border-mid);}
+    .info-table td{padding:11px 16px;font-size:13px;color:var(--text-mid);border:1px solid var(--border-mid);line-height:1.7;}
+    .doc-notice{background:var(--white);border:1px solid var(--border-mid);border-left:3px solid var(--gold);padding:16px 20px;margin-top:32px;font-size:13px;color:var(--text-light);line-height:1.8;}
+    .site-footer{background:var(--navy);}
+    .footer-inner{max-width:1080px;margin:0 auto;padding:32px 32px 20px;display:grid;grid-template-columns:1.8fr 1fr 1fr;gap:40px;border-bottom:1px solid rgba(255,255,255,0.07);}
+    .footer-brand .logo-text{font-size:18px;color:var(--white);display:block;margin-bottom:8px;}
+    .footer-brand .logo-text em{color:#C89A40;}
+    .footer-brand p{font-size:12px;color:rgba(255,255,255,0.32);line-height:1.9;}
+    .footer-col h4{font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.45);text-transform:uppercase;margin-bottom:12px;}
+    .footer-col a{display:block;font-size:12px;color:rgba(255,255,255,0.32);margin-bottom:8px;transition:color 0.15s;}
+    .footer-col a:hover{color:rgba(255,255,255,0.75);}
+    .footer-legal{max-width:1080px;margin:0 auto;padding:14px 32px;font-size:11px;color:rgba(255,255,255,0.20);line-height:2;border-bottom:1px solid rgba(255,255,255,0.05);}
+    .footer-legal strong{color:rgba(255,255,255,0.38);}
+    .footer-bottom{max-width:1080px;margin:0 auto;padding:12px 32px;display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,0.20);}
+    .footer-bottom a{color:rgba(255,255,255,0.26);margin-left:16px;}
+    .footer-bottom a:hover{color:rgba(255,255,255,0.7);}
+
+    @media(max-width:860px){
+      .footer-inner{grid-template-columns:1fr 1fr;}
+      .doc-chapter-title{font-size:15px;}
+    }
+    @media(max-width:600px){.header-top{grid-template-columns:auto 1fr;padding:12px 20px;}.wrap{padding:0 20px;}.footer-inner{grid-template-columns:1fr;gap:20px;padding:24px 20px 16px;}.footer-legal,.footer-bottom{padding-left:20px;padding-right:20px;}.nav-inner{overflow-x:auto;justify-content:flex-start;padding:0 20px;}}
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-top">
+    <a href="index.html" class="header-back">← 홈으로</a>
+    <div><a href="index.html"><span class="logo-text">다시연 <em>타임즈</em></span><span class="logo-tagline">Dasiyeon Times</span></a></div>
+    <div></div>
+  </div>
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a href="index.html">전체</a>      <a href="category.html?cat=마음">마음</a>
+      <a href="category.html?cat=경영">경영</a>
+      <a href="category.html?cat=AI">AI</a>
+      <a href="category.html?cat=컬럼">컬럼</a><a href="about.html">소개</a>
+    </div>
+  </nav>
+</header>
+
+<div class="page-hero">
+  <span class="page-hero-label">Privacy Policy</span>
+  <h1>개인정보처리방침</h1>
+  <p>다시연 타임즈는 「개인정보 보호법」 및 관련 법령에 따라<br>이용자의 개인정보를 안전하게 보호하고 있습니다.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="doc-body">
+<div class="wrap">
+
+  <div class="effective-date">
+    📅 <strong>시행일:</strong> 2026년 1월 1일 &nbsp;|&nbsp; <strong>최종 수정일:</strong> 2026년 1월 1일
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 1 조</span> 개인정보의 처리 목적</div>
+    <p class="doc-text">다시연 타임즈(이하 "본지")는 다음의 목적을 위하여 개인정보를 처리합니다. 처리하는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.</p>
+    <ul class="doc-list">
+      <li>뉴스레터 발송 및 구독 관리</li>
+      <li>독자 문의·민원 처리 및 답변</li>
+      <li>제보·기고 접수 및 처리</li>
+      <li>반론·정정 보도 신청 처리</li>
+    </ul>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 2 조</span> 처리하는 개인정보 항목</div>
+    <table class="info-table">
+      <tr>
+        <th>수집 목적</th>
+        <th>수집 항목</th>
+        <th>보유 기간</th>
+      </tr>
+      <tr>
+        <td>뉴스레터 구독</td>
+        <td>이메일 주소</td>
+        <td>구독 해지 시까지</td>
+      </tr>
+      <tr>
+        <td>독자 문의</td>
+        <td>이름(선택), 이메일, 문의 내용</td>
+        <td>처리 완료 후 1년</td>
+      </tr>
+      <tr>
+        <td>제보·기고</td>
+        <td>이름, 연락처, 제보 내용</td>
+        <td>처리 완료 후 3년</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 3 조</span> 개인정보의 처리 및 보유 기간</div>
+    <p class="doc-text">본지는 법령에 따른 개인정보 보유·이용 기간 또는 정보주체로부터 개인정보를 수집 시에 동의받은 개인정보 보유·이용 기간 내에서 개인정보를 처리·보유합니다.</p>
+    <ul class="doc-list">
+      <li>뉴스레터 구독 관련 정보: 구독 해지 요청 시까지</li>
+      <li>민원 처리 관련 정보: 처리 완료 후 1년</li>
+      <li>관련 법령에 따른 보존이 필요한 경우 해당 법령에서 정한 기간</li>
+    </ul>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 4 조</span> 개인정보의 제3자 제공</div>
+    <p class="doc-text">본지는 원칙적으로 이용자의 개인정보를 제3자에게 제공하지 않습니다. 다만, 아래의 경우에는 예외로 합니다.</p>
+    <ul class="doc-list">
+      <li>이용자가 사전에 동의한 경우</li>
+      <li>법령의 규정에 의거하거나, 수사 목적으로 법령에서 정해진 절차와 방법에 따라 수사기관의 요구가 있는 경우</li>
+    </ul>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 5 조</span> 개인정보의 안전성 확보 조치</div>
+    <p class="doc-text">본지는 개인정보의 안전성 확보를 위해 다음과 같은 조치를 취하고 있습니다.</p>
+    <ul class="doc-list">
+      <li>개인정보 취급 직원의 최소화 및 교육 실시</li>
+      <li>개인정보에 대한 접근 제한 및 접근권한 관리</li>
+      <li>개인정보의 암호화 저장 및 전송</li>
+      <li>해킹·바이러스 등에 대비한 보안 조치</li>
+    </ul>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 6 조</span> 정보주체의 권리·의무 및 행사 방법</div>
+    <p class="doc-text">이용자는 개인정보주체로서 다음과 같은 권리를 행사할 수 있습니다.</p>
+    <ul class="doc-list">
+      <li>개인정보 열람 요구</li>
+      <li>오류 등이 있는 경우 정정 요구</li>
+      <li>삭제 요구</li>
+      <li>처리 정지 요구</li>
+    </ul>
+    <p class="doc-text">권리 행사는 이메일(nstar1109@gmail.com)을 통해 하실 수 있으며, 본지는 이에 대해 지체 없이 조치하겠습니다.</p>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 7 조</span> 개인정보 보호책임자</div>
+    <table class="info-table">
+      <tr><th>성명</th><td>최형규</td></tr>
+      <tr><th>직책</th><td>발행인 겸 개인정보 보호책임자</td></tr>
+      <tr><th>이메일</th><td>nstar1109@gmail.com</td></tr>
+      <tr><th>전화</th><td>070-8095-2012</td></tr>
+    </table>
+    <p class="doc-text">개인정보 처리에 관한 불만·피해 구제 등을 위한 기관 안내:</p>
+    <ul class="doc-list">
+      <li>개인정보 침해신고센터: privacy.kisa.or.kr / 118</li>
+      <li>개인정보 분쟁조정위원회: www.kopico.go.kr / 1833-6972</li>
+      <li>대검찰청 사이버수사과: www.spo.go.kr / 1301</li>
+      <li>경찰청 사이버수사국: ecrm.cyber.go.kr / 182</li>
+    </ul>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 8 조</span> 개인정보처리방침 변경</div>
+    <p class="doc-text">이 개인정보처리방침은 시행일로부터 적용되며, 법령 및 방침에 따른 변경 내용의 추가·삭제 및 정정이 있는 경우에는 변경사항의 시행 7일 전부터 공지사항을 통하여 고지할 것입니다.</p>
+  </div>
+
+  <div class="doc-notice">
+    본 개인정보처리방침은 2026년 1월 1일부터 시행합니다.<br>
+    문의: nstar1109@gmail.com
+  </div>
+
+</div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand"><span class="logo-text">다시연 <em>타임즈</em></span><p>회복과 성장의 미디어<br>마음·경영·AI·삶의 통찰을 전합니다.</p></div>
+        <div class="footer-col">
+      <h4>카테고리</h4>
+      <a href="category.html?cat=마음">마음</a>
+      <a href="category.html?cat=경영">경영</a>
+      <a href="category.html?cat=AI">AI</a>
+      <a href="category.html?cat=컬럼">컬럼</a>
+    </div>
+    <div class="footer-col"><h4>미디어</h4><a href="about.html">소개</a><a href="ethics.html">취재윤리강령</a><a href="privacy.html">개인정보처리방침</a><a href="youth.html">청소년보호정책</a></div>
+  </div>
+  <div class="footer-legal">
+    <strong>신문명:</strong> 다시연 타임즈 &nbsp;|&nbsp;<strong>등록번호:</strong> 등록신청중 &nbsp;|&nbsp;<strong>발행인:</strong> 최형규 &nbsp;|&nbsp;<strong>편집인:</strong> 최형규 &nbsp;|&nbsp;<strong>청소년보호책임자:</strong> 최형규<br>
+    <strong>발행소:</strong> 경기도 부천시 신흥로223 신중동역랜드마크푸르지오시티 102동 1218호 &nbsp;|&nbsp;<strong>전화:</strong> 070-8095-2012 &nbsp;|&nbsp;<strong>팩스:</strong> 0505-075-3779 &nbsp;|&nbsp;<strong>이메일:</strong> nstar1109@gmail.com<br>
+    본 인터넷신문은 「신문 등의 진흥에 관한 법률」에 의거하여 등록된 인터넷신문입니다.
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 다시연 타임즈. All rights reserved.</span>
+    <div><a href="privacy.html">개인정보처리방침</a><a href="terms.html">이용약관</a><a href="youth.html">청소년보호정책</a></div>
+  </div>
+</footer>
+</body>
+</html>

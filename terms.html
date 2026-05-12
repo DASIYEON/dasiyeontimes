@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>이용약관 — 다시연 타임즈</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--cream:#FAF8F4;--navy:#1C2B4A;--gold:#A67825;--text:#1A1A1A;--text-mid:#4A4640;--text-light:#8A857E;--white:#FFFFFF;--border:rgba(28,43,74,0.10);--border-mid:rgba(28,43,74,0.18);--serif:'Noto Serif KR',Georgia,serif;--sans:'Noto Sans KR',sans-serif;}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:var(--sans);background:var(--cream);color:var(--text);line-height:1.8;-webkit-font-smoothing:antialiased;}
+    a{text-decoration:none;color:inherit;}
+    .site-header{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
+    .header-top{max-width:1080px;margin:0 auto;padding:16px 32px 12px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;border-bottom:1px solid var(--border);}
+    .header-back{font-size:12px;color:var(--text-light);transition:color 0.2s;}
+    .header-back:hover{color:var(--navy);}
+    .logo-text{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--navy);letter-spacing:-1px;display:block;line-height:1;text-align:center;}
+    .logo-text em{font-style:normal;color:var(--gold);}
+    .logo-tagline{font-size:9px;color:var(--text-light);letter-spacing:3px;text-transform:uppercase;display:block;margin-top:3px;text-align:center;}
+    .site-nav{background:var(--white);border-bottom:2px solid var(--navy);}
+    .nav-inner{max-width:1080px;margin:0 auto;padding:0 32px;display:flex;justify-content:center;}
+    .nav-inner a{padding:10px 20px;font-size:13px;font-weight:500;color:var(--text-mid);border-bottom:3px solid transparent;transition:all 0.2s;margin-bottom:-2px;}
+    .nav-inner a:hover{color:var(--navy);border-bottom-color:var(--navy);}
+    .page-hero{background:var(--navy);padding:56px 32px 48px;text-align:center;}
+    .page-hero-label{font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:12px;display:block;}
+    .page-hero h1{font-family:var(--serif);font-size:34px;font-weight:700;color:var(--white);margin-bottom:12px;}
+    .page-hero p{font-size:14px;color:rgba(255,255,255,0.5);max-width:480px;margin:0 auto;line-height:1.8;}
+    .hero-divider{width:40px;height:2px;background:var(--gold);margin:20px auto 0;}
+    .wrap{max-width:800px;margin:0 auto;padding:0 32px;}
+    .doc-body{padding:56px 0 80px;}
+    .effective-date{background:var(--white);border:1px solid var(--border-mid);padding:14px 20px;margin-bottom:36px;font-size:13px;color:var(--text-mid);display:flex;align-items:center;gap:8px;}
+    .effective-date strong{color:var(--navy);}
+    .doc-chapter{margin-bottom:44px;}
+    .doc-chapter-title{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--navy);margin-bottom:14px;padding-bottom:11px;border-bottom:2px solid var(--navy);display:flex;align-items:center;gap:10px;}
+    .chapter-num{background:var(--navy);color:var(--white);font-family:var(--sans);font-size:11px;font-weight:500;padding:3px 10px;letter-spacing:0.5px;}
+    .doc-text{font-size:14px;color:var(--text-mid);line-height:2;margin-bottom:12px;}
+    .doc-list{padding-left:0;list-style:none;margin-bottom:12px;}
+    .doc-list li{font-size:14px;color:var(--text-mid);line-height:1.9;padding:7px 0 7px 18px;border-bottom:1px dashed var(--border);position:relative;}
+    .doc-list li:last-child{border-bottom:none;}
+    .doc-list li::before{content:'▪';position:absolute;left:0;color:var(--gold);font-size:10px;top:10px;}
+    .doc-notice{background:var(--white);border:1px solid var(--border-mid);border-left:3px solid var(--gold);padding:16px 20px;margin-top:32px;font-size:13px;color:var(--text-light);line-height:1.8;}
+    .site-footer{background:var(--navy);}
+    .footer-inner{max-width:1080px;margin:0 auto;padding:32px 32px 20px;display:grid;grid-template-columns:1.8fr 1fr 1fr;gap:40px;border-bottom:1px solid rgba(255,255,255,0.07);}
+    .footer-brand .logo-text{font-size:18px;color:var(--white);display:block;margin-bottom:8px;}
+    .footer-brand .logo-text em{color:#C89A40;}
+    .footer-brand p{font-size:12px;color:rgba(255,255,255,0.32);line-height:1.9;}
+    .footer-col h4{font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.45);text-transform:uppercase;margin-bottom:12px;}
+    .footer-col a{display:block;font-size:12px;color:rgba(255,255,255,0.32);margin-bottom:8px;transition:color 0.15s;}
+    .footer-col a:hover{color:rgba(255,255,255,0.75);}
+    .footer-legal{max-width:1080px;margin:0 auto;padding:14px 32px;font-size:11px;color:rgba(255,255,255,0.20);line-height:2;border-bottom:1px solid rgba(255,255,255,0.05);}
+    .footer-legal strong{color:rgba(255,255,255,0.38);}
+    .footer-bottom{max-width:1080px;margin:0 auto;padding:12px 32px;display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,0.20);}
+    .footer-bottom a{color:rgba(255,255,255,0.26);margin-left:16px;}
+    .footer-bottom a:hover{color:rgba(255,255,255,0.7);}
+
+    @media(max-width:860px){
+      .footer-inner{grid-template-columns:1fr 1fr;}
+      .doc-chapter-title{font-size:15px;}
+    }
+    @media(max-width:600px){.header-top{grid-template-columns:auto 1fr;padding:12px 20px;}.wrap{padding:0 20px;}.footer-inner{grid-template-columns:1fr;gap:20px;padding:24px 20px 16px;}.footer-legal,.footer-bottom{padding-left:20px;padding-right:20px;}.nav-inner{overflow-x:auto;justify-content:flex-start;padding:0 20px;}}
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-top">
+    <a href="index.html" class="header-back">← 홈으로</a>
+    <div><a href="index.html"><span class="logo-text">다시연 <em>타임즈</em></span><span class="logo-tagline">Dasiyeon Times</span></a></div>
+    <div></div>
+  </div>
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a href="index.html">전체</a>
+      <a href="category.html?cat=마음">마음</a>
+      <a href="category.html?cat=경영">경영</a>
+      <a href="category.html?cat=AI">AI</a>
+      <a href="category.html?cat=컬럼">컬럼</a>
+      <a href="about.html">소개</a>
+    </div>
+  </nav>
+</header>
+
+<div class="page-hero">
+  <span class="page-hero-label">Terms of Service</span>
+  <h1>이용약관</h1>
+  <p>다시연 타임즈 서비스 이용에 관한 약관입니다.<br>서비스 이용 전 반드시 확인해 주시기 바랍니다.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="doc-body">
+<div class="wrap">
+
+  <div class="effective-date">
+    📅 <strong>시행일:</strong> 2026년 1월 1일 &nbsp;|&nbsp; <strong>최종 수정일:</strong> 2026년 1월 1일
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 1 조</span> 목적</div>
+    <p class="doc-text">이 약관은 다시연 타임즈(이하 "본지")가 제공하는 인터넷 신문 서비스(이하 "서비스")의 이용과 관련하여 본지와 이용자 간의 권리·의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.</p>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 2 조</span> 용어의 정의</div>
+    <ul class="doc-list">
+      <li>"서비스"란 본지가 운영하는 인터넷 신문 홈페이지 및 관련 제반 서비스를 의미합니다.</li>
+      <li>"이용자"란 본지의 서비스에 접속하여 이 약관에 따라 서비스를 이용하는 자를 말합니다.</li>
+      <li>"콘텐츠"란 본지가 서비스 내에 게재하는 기사, 칼럼, 사진, 영상 등 일체의 정보를 말합니다.</li>
+      <li>"뉴스레터"란 본지가 구독 신청한 이용자에게 이메일로 발송하는 정기 소식을 말합니다.</li>
+    </ul>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 3 조</span> 약관의 효력 및 변경</div>
+    <ul class="doc-list">
+      <li>이 약관은 서비스 초기 화면에 게시하거나 기타의 방법으로 이용자에게 공지함으로써 효력을 발생합니다.</li>
+      <li>본지는 합리적인 사유가 발생한 경우 관련 법령에 위배되지 않는 범위 내에서 이 약관을 변경할 수 있습니다.</li>
+      <li>약관이 변경되는 경우 변경 사항을 시행일 7일 전부터 서비스 공지사항을 통해 고지합니다.</li>
+    </ul>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 4 조</span> 서비스의 제공</div>
+    <ul class="doc-list">
+      <li>본지는 마음·경영·AI·컬럼 분야의 기사, 칼럼 및 관련 정보를 제공합니다.</li>
+      <li>뉴스레터 구독 서비스를 통해 이용자에게 정기적으로 콘텐츠를 발송합니다.</li>
+      <li>본지는 서비스의 질적 향상을 위해 서비스 내용을 변경할 수 있으며, 이 경우 변경 내용을 사전에 공지합니다.</li>
+      <li>서비스는 연중무휴 24시간 제공을 원칙으로 하나, 시스템 점검·장애 등의 경우 일시적으로 중단될 수 있습니다.</li>
+    </ul>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 5 조</span> 이용자의 의무</div>
+    <ul class="doc-list">
+      <li>이용자는 관계 법령, 이 약관의 규정 및 서비스 이용 안내 등 본지가 공지하는 사항을 준수하여야 합니다.</li>
+      <li>이용자는 서비스를 이용하여 다음 각 호에 해당하는 행위를 하여서는 안 됩니다.</li>
+      <li>본지의 저작물을 무단으로 복제·배포·전송·가공하는 행위</li>
+      <li>타인의 명예를 훼손하거나 개인정보를 침해하는 행위</li>
+      <li>서비스 운영을 방해하거나 본지의 업무를 방해하는 행위</li>
+      <li>허위 정보를 유포하거나 타인을 기망하는 행위</li>
+    </ul>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 6 조</span> 저작권 및 지식재산권</div>
+    <ul class="doc-list">
+      <li>본지가 제공하는 모든 콘텐츠의 저작권은 본지에 귀속됩니다.</li>
+      <li>이용자는 서비스에서 얻은 정보를 본지의 사전 동의 없이 복제·전송·출판·배포·방송 등의 방법으로 이용하거나 제3자에게 이용하게 하여서는 안 됩니다.</li>
+      <li>개인적이고 비상업적인 목적의 인용은 출처를 명시하는 조건 하에 허용됩니다.</li>
+    </ul>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 7 조</span> 면책조항</div>
+    <ul class="doc-list">
+      <li>본지는 천재지변, 전쟁, 기간통신사업자의 서비스 중지 등 불가항력적인 사유로 서비스를 제공할 수 없는 경우 책임이 면제됩니다.</li>
+      <li>본지는 이용자가 서비스를 이용하여 기대하는 수익을 얻지 못하거나 상실한 것에 대하여 책임을 지지 않습니다.</li>
+      <li>본지는 서비스에 게재된 정보, 자료, 사실의 신뢰도, 정확성에 대하여 보증하지 않으며, 그로 인한 책임을 지지 않습니다.</li>
+    </ul>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 8 조</span> 뉴스레터 구독 및 해지</div>
+    <ul class="doc-list">
+      <li>이용자는 이메일 주소를 제공함으로써 뉴스레터 수신에 동의할 수 있습니다.</li>
+      <li>뉴스레터 수신을 원하지 않는 경우 수신 거부 링크를 통해 언제든지 구독을 해지할 수 있습니다.</li>
+      <li>구독 해지 후에도 이미 발송된 뉴스레터에 대해서는 취소가 불가능합니다.</li>
+    </ul>
+  </div>
+
+  <div class="doc-chapter">
+    <div class="doc-chapter-title"><span class="chapter-num">제 9 조</span> 분쟁 해결</div>
+    <ul class="doc-list">
+      <li>서비스 이용과 관련하여 발생한 분쟁에 대해 소송이 제기되는 경우 본지의 소재지를 관할하는 법원을 합의 관할 법원으로 합니다.</li>
+      <li>본지와 이용자 간에 발생한 분쟁에 관한 소송의 준거법은 대한민국 법으로 합니다.</li>
+    </ul>
+  </div>
+
+  <div class="doc-notice">
+    본 이용약관은 2026년 1월 1일부터 시행합니다.<br>
+    문의: nstar1109@gmail.com &nbsp;|&nbsp; 전화: 070-8095-2012
+  </div>
+
+</div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand"><span class="logo-text">다시연 <em>타임즈</em></span><p>회복과 성장의 미디어<br>마음·경영·AI·삶의 통찰을 전합니다.</p></div>
+    <div class="footer-col"><h4>미디어</h4><a href="about.html">소개</a><a href="ethics.html">취재윤리강령</a><a href="privacy.html">개인정보처리방침</a><a href="terms.html">이용약관</a><a href="youth.html">청소년보호정책</a></div>
+  </div>
+  <div class="footer-legal">
+    <strong>신문명:</strong> 다시연 타임즈 &nbsp;|&nbsp;<strong>등록번호:</strong> 등록신청중 &nbsp;|&nbsp;<strong>발행인:</strong> 최형규 &nbsp;|&nbsp;<strong>편집인:</strong> 최형규 &nbsp;|&nbsp;<strong>청소년보호책임자:</strong> 최형규<br>
+    <strong>발행소:</strong> 경기도 부천시 신흥로223 신중동역랜드마크푸르지오시티 102동 1218호 &nbsp;|&nbsp;<strong>전화:</strong> 070-8095-2012 &nbsp;|&nbsp;<strong>팩스:</strong> 0505-075-3779 &nbsp;|&nbsp;<strong>이메일:</strong> nstar1109@gmail.com<br>
+    본 인터넷신문은 「신문 등의 진흥에 관한 법률」에 의거하여 등록된 인터넷신문입니다.
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 다시연 타임즈. All rights reserved.</span>
+    <div><a href="privacy.html">개인정보처리방침</a><a href="terms.html">이용약관</a><a href="youth.html">청소년보호정책</a></div>
+  </div>
+</footer>
+</body>
+</html>

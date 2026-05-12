@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>기사 제목 — 다시연 타임즈</title>
+  <meta name="description" content="">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream:      #FAF8F4;
+      --cream-dark: #EFE9DF;
+      --navy:       #1C2B4A;
+      --navy-mid:   #2E4070;
+      --gold:       #A67825;
+      --text:       #1A1A1A;
+      --text-mid:   #4A4640;
+      --text-light: #8A857E;
+      --white:      #FFFFFF;
+      --border:     rgba(28,43,74,0.10);
+      --border-mid: rgba(28,43,74,0.18);
+      --serif:      'Noto Serif KR', Georgia, serif;
+      --sans:       'Noto Sans KR', sans-serif;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      font-family: var(--sans);
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { text-decoration:none; color:inherit; }
+
+    /* ════ HEADER ════ */
+    .site-header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top:0; z-index:100;
+    }
+    .header-top {
+      max-width: 1080px; margin:0 auto;
+      padding: 16px 32px 12px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .header-back {
+      font-size:12px; color:var(--text-light);
+      display:flex; align-items:center; gap:6px;
+      transition:color 0.2s;
+    }
+    .header-back:hover { color:var(--navy); }
+    .site-logo { text-align:center; }
+    .logo-text {
+      font-family:var(--serif); font-size:28px; font-weight:700;
+      color:var(--navy); letter-spacing:-1px; display:block; line-height:1;
+    }
+    .logo-text em { font-style:normal; color:var(--gold); }
+    .logo-tagline {
+      font-size:9px; color:var(--text-light);
+      letter-spacing:3px; text-transform:uppercase;
+      display:block; margin-top:3px;
+    }
+    .header-share {
+      text-align:right; display:flex;
+      justify-content:flex-end; gap:8px;
+    }
+    .share-btn {
+      font-size:11px; color:var(--text-light);
+      padding:5px 12px;
+      border:1px solid var(--border-mid);
+      background:none; cursor:pointer;
+      font-family:var(--sans); transition:all 0.2s;
+    }
+    .share-btn:hover { color:var(--navy); border-color:var(--navy); }
+
+    .site-nav { background:var(--white); border-bottom:2px solid var(--navy); }
+    .nav-inner {
+      max-width:1080px; margin:0 auto; padding:0 32px;
+      display:flex; justify-content:center;
+    }
+    .nav-inner a {
+      padding:10px 20px; font-size:13px; font-weight:500;
+      color:var(--text-mid); letter-spacing:0.5px;
+      border-bottom:3px solid transparent;
+      transition:all 0.2s; margin-bottom:-2px;
+    }
+    .nav-inner a:hover { color:var(--navy); border-bottom-color:var(--navy); }
+
+    /* ════ 브레드크럼 ════ */
+    .breadcrumb {
+      max-width:780px; margin:0 auto;
+      padding:16px 32px 0;
+      display:flex; align-items:center; gap:8px;
+      font-size:11px; color:var(--text-light);
+    }
+    .breadcrumb a { transition:color 0.2s; }
+    .breadcrumb a:hover { color:var(--navy); }
+    .breadcrumb-sep { opacity:0.4; }
+
+    /* ════ 기사 헤더 ════ */
+    .article-header {
+      max-width:780px; margin:0 auto;
+      padding:28px 32px 0;
+    }
+    .art-cat {
+      display:inline-block;
+      font-size:10px; font-weight:700;
+      letter-spacing:2px; text-transform:uppercase;
+      padding:3px 12px; margin-bottom:18px;
+    }
+    .cat-마음  { background:#e8f0e3; color:#3a6b2a; }
+    .cat-경영  { background:#f5ede3; color:#7a3e1a; }
+    .cat-AI    { background:#ece3f5; color:#4a2a7a; }
+    .cat-컬럼  { background:#f5e8d8; color:#7a4a1a; }
+
+    .article-title {
+      font-family: var(--serif);
+      font-size: 34px; font-weight:700;
+      color: var(--navy); line-height:1.5;
+      letter-spacing:-0.5px; margin-bottom:16px;
+    }
+
+    .article-summary {
+      font-size:16px; color:var(--text-mid);
+      line-height:1.85; margin-bottom:22px;
+      padding-bottom:22px;
+      border-bottom:1px solid var(--border-mid);
+    }
+
+    .article-meta-bar {
+      display:flex; align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap; gap:12px;
+      margin-bottom:0; padding-bottom:24px;
+      border-bottom:1px solid var(--border);
+    }
+    .meta-left { display:flex; align-items:center; gap:12px; }
+    .author-avatar {
+      width:40px; height:40px; border-radius:50%;
+      background:var(--navy);
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--serif); font-size:14px; font-weight:700;
+      color:var(--white); flex-shrink:0;
+    }
+    .author-info { display:flex; flex-direction:column; gap:2px; }
+    .author-name { font-size:13px; font-weight:500; color:var(--navy); }
+    .author-role { font-size:11px; color:var(--text-light); }
+    .meta-right {
+      display:flex; align-items:center; gap:14px;
+      font-size:11px; color:var(--text-light);
+    }
+    .meta-right span { display:flex; align-items:center; gap:4px; }
+
+    /* ════ 대표 이미지 ════ */
+    .article-hero-img {
+      max-width:780px; margin:0 auto;
+      padding:0 32px;
+    }
+    .article-hero-img img {
+      width:100%; max-height:460px;
+      object-fit:cover; display:block;
+    }
+    .article-hero-img .img-placeholder {
+      width:100%; height:380px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:64px;
+    }
+    .img-caption {
+      font-size:11px; color:var(--text-light);
+      text-align:center; padding:8px 0 0;
+      font-style:italic;
+    }
+
+    /* ════ 본문 ════ */
+    .article-body {
+      max-width:780px; margin:0 auto;
+      padding:32px 32px 48px;
+    }
+
+    /* 본문 타이포그래피 */
+    .article-content {
+      font-size:16px; line-height:2;
+      color:var(--text-mid);
+    }
+    .article-content p {
+      margin-bottom:1.6em;
+    }
+    .article-content h2 {
+      font-family:var(--serif); font-size:22px; font-weight:700;
+      color:var(--navy); margin:2em 0 0.8em;
+      line-height:1.5;
+    }
+    .article-content h3 {
+      font-family:var(--serif); font-size:18px; font-weight:600;
+      color:var(--navy); margin:1.8em 0 0.6em;
+    }
+    .article-content blockquote {
+      border-left:3px solid var(--gold);
+      padding:14px 20px;
+      background:#FDF9F2;
+      margin:1.8em 0;
+      font-family:var(--serif); font-size:17px;
+      color:var(--text-mid); font-style:italic;
+      line-height:1.9;
+    }
+    .article-content ul, .article-content ol {
+      padding-left:22px; margin:1em 0 1.6em;
+    }
+    .article-content li { margin-bottom:0.5em; }
+    .article-content hr {
+      border:none; border-top:1px solid var(--border-mid);
+      margin:2em 0;
+    }
+    .article-content strong { color:var(--navy); font-weight:600; }
+    .article-content a { color:var(--gold); text-decoration:underline; }
+
+    /* ════ 태그 & 공유 ════ */
+    .article-footer {
+      max-width:780px; margin:0 auto;
+      padding:0 32px 48px;
+      border-top:1px solid var(--border-mid);
+      padding-top:24px;
+    }
+    .share-box {
+      display:flex; align-items:center;
+      justify-content:space-between; flex-wrap:wrap; gap:16px;
+    }
+    .share-box-label {
+      font-size:12px; font-weight:500;
+      color:var(--text-mid); letter-spacing:0.5px;
+    }
+    .share-btns { display:flex; gap:8px; }
+    .share-action {
+      padding:8px 18px; font-size:12px; font-weight:500;
+      border:1px solid var(--border-mid);
+      background:none; cursor:pointer;
+      font-family:var(--sans); color:var(--text-mid);
+      transition:all 0.2s; display:flex; align-items:center; gap:6px;
+    }
+    .share-action:hover { background:var(--navy); color:white; border-color:var(--navy); }
+
+    /* ════ 관련 기사 ════ */
+    .related-section {
+      background:var(--white);
+      border-top:1px solid var(--border);
+      border-bottom:1px solid var(--border);
+      padding:48px 0;
+    }
+    .related-inner {
+      max-width:1080px; margin:0 auto; padding:0 32px;
+    }
+    .related-title {
+      font-family:var(--serif); font-size:14px; font-weight:700;
+      color:var(--navy); letter-spacing:1.5px;
+      padding-bottom:14px; border-bottom:2px solid var(--navy);
+      margin-bottom:24px;
+    }
+    .related-grid {
+      display:grid; grid-template-columns:repeat(3,1fr);
+      gap:1px; background:var(--border-mid);
+      border:1px solid var(--border-mid);
+    }
+    .related-art {
+      background:var(--white); padding:0;
+      cursor:pointer; transition:background 0.15s;
+      overflow:hidden;
+    }
+    .related-art:hover { background:var(--cream); }
+    .related-thumb {
+      width:100%; height:120px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:28px;
+    }
+    .th-마음 { background:linear-gradient(135deg,#dce8d6,#b8cfb0); }
+    .th-경영 { background:linear-gradient(135deg,#eee0d4,#d4c0a8); }
+    .th-AI   { background:linear-gradient(135deg,#e0d6ee,#c0b0d8); }
+    .th-컬럼 { background:linear-gradient(135deg,#eee8d6,#d4c8a8); }
+    .related-body { padding:16px 18px; }
+    .related-body .art-cat {
+      font-size:9px; margin-bottom:8px;
+    }
+    .related-body h4 {
+      font-family:var(--serif); font-size:14px; font-weight:600;
+      color:var(--navy); line-height:1.6; margin-bottom:6px;
+    }
+    .related-body p {
+      font-size:11px; color:var(--text-mid); line-height:1.6;
+    }
+    .related-body .art-date {
+      font-size:10px; color:var(--text-light);
+      margin-top:8px; display:block;
+    }
+
+    /* ════ FOOTER ════ */
+    .site-footer { background:var(--navy); }
+    .footer-inner {
+      max-width:1080px; margin:0 auto;
+      padding:36px 32px 24px;
+      display:grid; grid-template-columns:1.8fr 1fr 1fr;
+      gap:48px; border-bottom:1px solid rgba(255,255,255,0.07);
+    }
+    .footer-brand .logo-text { font-size:20px; color:var(--white); display:block; margin-bottom:8px; }
+    .footer-brand .logo-text em { color:#C89A40; }
+    .footer-brand p { font-size:12px; color:rgba(255,255,255,0.32); line-height:1.9; }
+    .footer-col h4 { font-size:10px; letter-spacing:2px; color:rgba(255,255,255,0.45); text-transform:uppercase; margin-bottom:12px; }
+    .footer-col a { display:block; font-size:12px; color:rgba(255,255,255,0.32); margin-bottom:8px; transition:color 0.15s; }
+    .footer-col a:hover { color:rgba(255,255,255,0.75); }
+    .footer-legal {
+      max-width:1080px; margin:0 auto; padding:16px 32px;
+      font-size:11px; color:rgba(255,255,255,0.20);
+      line-height:2.1; border-bottom:1px solid rgba(255,255,255,0.05);
+    }
+    .footer-legal strong { color:rgba(255,255,255,0.38); }
+    .footer-bottom {
+      max-width:1080px; margin:0 auto; padding:14px 32px;
+      display:flex; justify-content:space-between;
+      font-size:11px; color:rgba(255,255,255,0.20);
+    }
+    .footer-bottom a { color:rgba(255,255,255,0.26); margin-left:18px; }
+    .footer-bottom a:hover { color:rgba(255,255,255,0.7); }
+
+    /* ════ RESPONSIVE ════ */
+    @media (max-width:860px) {
+      .related-grid { grid-template-columns:1fr 1fr; }
+      .footer-inner { grid-template-columns:1fr 1fr; }
+    }
+    @media (max-width:600px) {
+      .header-top { grid-template-columns:auto 1fr; gap:12px; padding:12px 20px; }
+      .header-share { display:none; }
+      .logo-text { font-size:22px; }
+      .breadcrumb, .article-header, .article-hero-img,
+      .article-body, .article-footer { padding-left:20px; padding-right:20px; }
+      .article-title { font-size:24px; }
+      .article-content { font-size:15px; }
+      .related-grid { grid-template-columns:1fr; }
+      .footer-inner { grid-template-columns:1fr; gap:24px; padding:28px 20px 20px; }
+      .footer-legal, .footer-bottom { padding-left:20px; padding-right:20px; }
+      .nav-inner { overflow-x:auto; justify-content:flex-start; padding:0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── 헤더 ── -->
+<header class="site-header">
+  <div class="header-top">
+    <a href="index.html" class="header-back">← 목록으로</a>
+    <div class="site-logo">
+      <a href="index.html">
+        <span class="logo-text">다시연 <em>타임즈</em></span>
+        <span class="logo-tagline">Dasiyeon Times</span>
+      </a>
+    </div>
+    <div class="header-share">
+      <button class="share-btn" onclick="copyLink()">🔗 링크 복사</button>
+    </div>
+  </div>
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a href="index.html">전체</a>
+      <a href="category.html?cat=마음">마음</a>
+      <a href="category.html?cat=경영">경영</a>
+      <a href="category.html?cat=AI">AI</a>
+      <a href="category.html?cat=컬럼">컬럼</a>
+      <a href="about.html">소개</a>
+    </div>
+  </nav>
+</header>
+
+<!-- ── 브레드크럼 ── -->
+<div class="breadcrumb">
+  <a href="index.html">홈</a>
+  <span class="breadcrumb-sep">›</span>
+  <a href="category.html" id="bc-category">카테고리</a>
+  <span class="breadcrumb-sep">›</span>
+  <span id="bc-title" style="color:var(--text-mid);">기사 제목</span>
+</div>
+
+<!-- ── 기사 헤더 ── -->
+<div class="article-header">
+  <span class="art-cat" id="art-cat">카테고리</span>
+  <h1 class="article-title" id="art-title">기사 제목을 불러오는 중...</h1>
+  <p class="article-summary" id="art-summary"></p>
+  <div class="article-meta-bar">
+    <div class="meta-left">
+      <div class="author-avatar" id="author-avatar">최</div>
+      <div class="author-info">
+        <span class="author-name" id="author-name">최형규</span>
+        <span class="author-role">다시연 타임즈 편집장</span>
+      </div>
+    </div>
+    <div class="meta-right">
+      <span>📅 <span id="art-date"></span></span>
+      <span>✏️ <span id="art-category-text"></span></span>
+    </div>
+  </div>
+</div>
+
+<!-- ── 대표 이미지 ── -->
+<div class="article-hero-img" id="hero-img-wrap">
+  <!-- JS로 동적 삽입 -->
+</div>
+
+<!-- ── 본문 ── -->
+<div class="article-body">
+  <div class="article-content" id="art-content">
+    <p style="color:var(--text-light); text-align:center; padding:40px 0;">
+      기사를 불러오는 중입니다...
+    </p>
+  </div>
+</div>
+
+<!-- ── 기사 하단 ── -->
+<div class="article-footer">
+  <div class="share-box">
+    <span class="share-box-label">이 기사 공유하기</span>
+    <div class="share-btns">
+      <button class="share-action" onclick="copyLink()">🔗 링크 복사</button>
+      <button class="share-action" onclick="shareKakao()">💬 카카오톡</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── 관련 기사 ── -->
+<section class="related-section">
+  <div class="related-inner">
+    <div class="related-title">관련 기사</div>
+    <div class="related-grid" id="related-grid">
+      <!-- JS로 동적 삽입 -->
+    </div>
+  </div>
+</section>
+
+<!-- ── 푸터 ── -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="logo-text">다시연 <em>타임즈</em></span>
+      <p>회복과 성장의 미디어<br>마음·경영·AI·삶의 통찰을 전합니다.</p>
+    </div>
+    <div class="footer-col">
+      <h4>미디어</h4>
+      <a href="about.html">소개</a>
+      <a href="ethics.html">취재윤리강령</a>
+      <a href="privacy.html">개인정보처리방침</a>
+      <a href="terms.html">이용약관</a>
+      <a href="youth.html">청소년보호정책</a>
+    </div>
+  </div>
+  <div class="footer-legal">
+    <strong>신문명:</strong> 다시연 타임즈 &nbsp;|&nbsp;
+    <strong>등록번호:</strong> 등록신청중 &nbsp;|&nbsp;
+    <strong>발행인:</strong> 최형규 &nbsp;|&nbsp;
+    <strong>편집인:</strong> 최형규 &nbsp;|&nbsp;
+    <strong>청소년보호책임자:</strong> 최형규<br>
+    <strong>발행소:</strong> 경기도 부천시 신흥로223 신중동역랜드마크푸르지오시티 102동 1218호 &nbsp;|&nbsp;
+    <strong>전화:</strong> 070-8095-2012 &nbsp;|&nbsp;<strong>팩스:</strong> 0505-075-3779 &nbsp;|&nbsp;
+    <strong>이메일:</strong> nstar1109@gmail.com<br>
+    본 인터넷신문은 「신문 등의 진흥에 관한 법률」에 의거하여 등록된 인터넷신문입니다.
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 다시연 타임즈. All rights reserved.</span>
+    <div>
+      <a href="privacy.html">개인정보처리방침</a>
+      <a href="terms.html">이용약관</a>
+      <a href="youth.html">청소년보호정책</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── URL 파라미터에서 기사 ID 읽기 ──
+  const params = new URLSearchParams(window.location.search);
+  const articleId = params.get('id');
+
+  // ── LocalStorage에서 기사 데이터 불러오기 ──
+  const articles = JSON.parse(localStorage.getItem('dt_articles') || '[]');
+
+  // 카테고리별 그라데이션
+  const catGrad = {
+    '마음':  'linear-gradient(135deg,#dce8d6,#b8cfb0)',
+    '경영':  'linear-gradient(135deg,#eee0d4,#d4c0a8)',
+    'AI':    'linear-gradient(135deg,#e0d6ee,#c0b0d8)',
+    '컬럼':  'linear-gradient(135deg,#eee8d6,#d4c8a8)',
+  };
+
+  // 카테고리 이모지
+  const catEmoji = { '마음':'🌿', '경영':'📊', 'AI':'🤖', '컬럼':'✍️' };
+
+  // ── 기사 렌더링 ──
+  function renderArticle(a) {
+    // 메타 태그 업데이트
+    document.title = a.title + ' — 다시연 타임즈';
+    document.querySelector('meta[name="description"]').content = a.summary;
+
+    // 브레드크럼
+    document.getElementById('bc-category').textContent = a.category;
+    document.getElementById('bc-title').textContent = a.title.length > 20
+      ? a.title.slice(0,20) + '...' : a.title;
+
+    // 카테고리 배지
+    const catEl = document.getElementById('art-cat');
+    catEl.textContent = a.category;
+    catEl.className = 'art-cat cat-' + a.category;
+
+    // 제목·요약
+    document.getElementById('art-title').textContent = a.title;
+    document.getElementById('art-summary').textContent = a.summary;
+
+    // 메타
+    document.getElementById('author-name').textContent = a.author;
+    document.getElementById('author-avatar').textContent = a.author.charAt(0);
+    document.getElementById('art-date').textContent = a.dateStr;
+    document.getElementById('art-category-text').textContent = a.category;
+
+    // ── 대표 이미지 (상단 고정) ──
+    const heroWrap = document.getElementById('hero-img-wrap');
+    if(a.image) {
+      heroWrap.innerHTML = `
+        <img src="${a.image}" alt="${a.title}" 
+          onerror="this.parentElement.innerHTML=getFallbackImg('${a.category}')">
+        <p class="img-caption">© 다시연 타임즈</p>`;
+    } else {
+      // 이미지 없으면 카테고리 그라데이션 플레이스홀더
+      heroWrap.innerHTML = `
+        <div class="img-placeholder"
+          style="background:${catGrad[a.category] || catGrad['컬럼']}">
+          <span style="font-size:72px;opacity:0.4;">${catEmoji[a.category] || '📄'}</span>
+        </div>`;
+    }
+
+    // ── 본문 ──
+    document.getElementById('art-content').innerHTML = a.body ||
+      '<p style="color:var(--text-light);">본문 내용이 없습니다.</p>';
+
+    // ── 관련 기사 (같은 카테고리, 최대 3개) ──
+    const related = articles
+      .filter(x => x.id !== a.id && x.category === a.category && x.status === '발행')
+      .slice(0, 3);
+
+    const grid = document.getElementById('related-grid');
+    if(related.length === 0) {
+      // 카테고리 무관 최신 3개
+      const fallback = articles
+        .filter(x => x.id !== a.id && x.status === '발행')
+        .slice(0, 3);
+      grid.innerHTML = fallback.length > 0
+        ? fallback.map(r => relatedCard(r)).join('')
+        : `<div style="grid-column:1/-1;padding:40px;text-align:center;
+            color:var(--text-light);font-size:13px;background:var(--white);">
+            관련 기사가 없습니다.</div>`;
+    } else {
+      grid.innerHTML = related.map(r => relatedCard(r)).join('');
+    }
+  }
+
+  function relatedCard(r) {
+    const grad = catGrad[r.category] || catGrad['컬럼'];
+    const emoji = catEmoji[r.category] || '📄';
+    const thumb = r.image
+      ? `<img alt="이미지" src="${r.image}" style="width:100%;height:120px;object-fit:cover;display:block;"
+           onerror="this.outerHTML='<div class=\\'related-thumb\\'style=\\'background:${grad}\\'>${emoji}</div>'">`
+      : `<div class="related-thumb" style="background:${grad}">${emoji}</div>`;
+    return `
+      <div class="related-art" onclick="location.href='article.html?id=${r.id}'">
+        ${thumb}
+        <div class="related-body">
+          <span class="art-cat cat-${r.category}">${r.category}</span>
+          <h4>${r.title}</h4>
+          <p>${r.summary}</p>
+          <span class="art-date">${r.dateStr}</span>
+        </div>
+      </div>`;
+  }
+
+  function getFallbackImg(cat) {
+    const grad = catGrad[cat] || catGrad['컬럼'];
+    const emoji = catEmoji[cat] || '📄';
+    return `<div class="img-placeholder" style="background:${grad}">
+      <span style="font-size:72px;opacity:0.4;">${emoji}</span></div>`;
+  }
+
+  // ── 샘플 기사 (LocalStorage에 아무것도 없을 때) ──
+  const sampleArticle = {
+    id: 0,
+    title: '너무 오래 강했던 당신에게 — 쉬어도 된다는 허락',
+    summary: '강함을 유지하느라 정작 자신을 잃어버린 사람들이 있다. 그들은 무너지는 순간에도 "괜찮다"고 먼저 말한다.',
+    body: `
+      <p>심리상담 현장에서 자주 만나는 유형이 있다. 오랫동안 강해야 했던 사람들이다. 가정의 기둥이었거나, 조직의 리더였거나, 아니면 그냥 "쉽게 무너지면 안 된다"는 믿음을 오래 품고 살아온 이들이다.</p>
+      <h2>강함이 습관이 된 사람들</h2>
+      <p>이들의 공통점은 피로를 나중으로 미룬다는 것이다. 지금은 버텨야 할 때라고 스스로에게 말한다. 그리고 그 나중은 좀처럼 오지 않는다.</p>
+      <blockquote>무너지는 것은 약함이 아니라 인간다움이다. 우리는 모두 어느 순간, 쉬어도 된다는 허락이 필요하다.</blockquote>
+      <h2>회복의 첫 단계</h2>
+      <p>번아웃을 경험한 이들과 이야기하다 보면 공통된 패턴이 있다. 쉬어도 된다는 허락을 스스로에게 주는 순간, 비로소 회복이 시작된다는 것이다.</p>
+      <p>이것은 단순히 쉰다는 의미가 아니다. 강해야 한다는 내면의 명령으로부터 잠시 자유로워지는 것이다.</p>
+      <h3>실제 사례에서 배우는 것</h3>
+      <p>10년째 가게를 운영하다 폐업을 결정한 한 소상공인은 이렇게 말했다. "문을 닫으면서 처음으로 울었어요. 그런데 그게 이상하게 후련했어요."</p>
+      <p>무너지는 경험이 오히려 회복의 출발점이 된 것이다. 강함을 내려놓는 순간이야말로 진짜 자신을 만나는 시간이다.</p>
+      <h2>당신에게 전하는 말</h2>
+      <p>지금 너무 오래 강해왔다면, 오늘 하루만큼은 스스로에게 말해보자. 쉬어도 된다고.</p>
+    `,
+    category: '컬럼',
+    image: '',
+    author: '최형규',
+    status: '발행',
+    date: new Date().toISOString(),
+    dateStr: new Date().toLocaleDateString('ko-KR').replace(/\. /g,'.').replace('.','').slice(0,-1),
+  };
+
+  // ── 초기 실행 ──
+  if(articleId) {
+    const found = articles.find(a => String(a.id) === articleId);
+    if(found) renderArticle(found);
+    else renderArticle(sampleArticle);
+  } else {
+    // ID 없으면 샘플 기사 표시
+    renderArticle(sampleArticle);
+  }
+
+  // ── 링크 복사 ──
+  function copyLink() {
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => showToast('링크가 복사되었습니다!'))
+      .catch(() => {
+        const t = document.createElement('textarea');
+        t.value = window.location.href;
+        document.body.appendChild(t);
+        t.select(); document.execCommand('copy');
+        document.body.removeChild(t);
+        showToast('링크가 복사되었습니다!');
+      });
+  }
+
+  function shareKakao() {
+    showToast('카카오톡 공유는 Supabase 연동 후 활성화됩니다.');
+  }
+
+  // ── 토스트 ──
+  let toastTimer;
+  function showToast(msg) {
+    let t = document.getElementById('toast-msg');
+    if(!t) {
+      t = document.createElement('div');
+      t.id = 'toast-msg';
+      t.style.cssText = `position:fixed;bottom:28px;right:28px;
+        background:var(--navy);color:white;padding:12px 20px;
+        font-size:13px;font-family:var(--sans);z-index:999;
+        transition:all 0.3s;`;
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.opacity = '1'; t.style.transform = 'translateY(0)';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      t.style.opacity = '0'; t.style.transform = 'translateY(20px)';
+    }, 2500);
+  }
+</script>
+</body>
+</html>
