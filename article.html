@@ -373,7 +373,7 @@
         }
       } catch(e) { console.warn('Supabase 동기화 오류:', e); }
     }
-    window.dtSyncPromise = syncArticles();
+    syncArticles();
   </script>
 </head>
 <body>
@@ -511,7 +511,7 @@
   const articleId = params.get('id');
 
   // ── LocalStorage에서 기사 데이터 불러오기 ──
-  let articles = JSON.parse(localStorage.getItem('dt_articles') || '[]');
+  const articles = JSON.parse(localStorage.getItem('dt_articles') || '[]');
 
   // 카테고리별 그라데이션
   const catGrad = {
@@ -645,19 +645,14 @@
   };
 
   // ── 초기 실행 ──
-  function initArticlePage() {
-    try { articles = JSON.parse(localStorage.getItem('dt_articles') || '[]'); }
-    catch(e) { articles = []; }
-    if(articleId) {
-      const found = articles.find(a => String(a.id) === articleId);
-      if(found) renderArticle(found);
-      else renderArticle(sampleArticle);
-    } else {
-      // ID 없으면 샘플 기사 표시
-      renderArticle(sampleArticle);
-    }
+  if(articleId) {
+    const found = articles.find(a => String(a.id) === articleId);
+    if(found) renderArticle(found);
+    else renderArticle(sampleArticle);
+  } else {
+    // ID 없으면 샘플 기사 표시
+    renderArticle(sampleArticle);
   }
-  (window.dtSyncPromise || Promise.resolve()).finally(initArticlePage);
 
   // ── 링크 복사 ──
   function copyLink() {

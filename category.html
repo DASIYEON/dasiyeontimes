@@ -155,7 +155,7 @@
         }
       } catch(e) { console.warn('Supabase 동기화 오류:', e); }
     }
-    window.dtSyncPromise = syncArticles();
+    syncArticles();
   </script>
 </head>
 <body>
@@ -448,13 +448,7 @@
   }
 
   // ── 초기화 ──
-  (window.dtSyncPromise || Promise.resolve()).finally(() => {
-    try {
-      allArticles = JSON.parse(localStorage.getItem('dt_articles') || '[]')
-        .filter(a => a.status === '발행');
-    } catch(e) { allArticles = []; }
-    selectCat(initCat);
-  });
+  selectCat(initCat);
 </script>
 </body>
 </html>
