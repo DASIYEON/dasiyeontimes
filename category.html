@@ -155,7 +155,7 @@
         }
       } catch(e) { console.warn('Supabase 동기화 오류:', e); }
     }
-    syncArticles();
+    window.dtSyncPromise = syncArticles();
   </script>
 </head>
 <body>
@@ -163,9 +163,9 @@
 <!-- 헤더 -->
 <header class="site-header">
   <div class="header-top">
-    <a href="index-v5.html" class="header-back">← 홈으로</a>
+    <a href="index.html" class="header-back">← 홈으로</a>
     <div>
-      <a href="index-v5.html">
+      <a href="index.html">
         <span class="logo-text">다시연 <em>타임즈</em></span>
         <span class="logo-tagline">Dasiyeon Times</span>
       </a>
@@ -174,7 +174,7 @@
   </div>
   <nav class="site-nav">
     <div class="nav-inner">
-      <a href="index-v5.html">전체</a>
+      <a href="index.html">전체</a>
       <a href="category.html?cat=마음" id="nav-마음">마음</a>
       <a href="category.html?cat=경영" id="nav-경영">경영</a>
       <a href="category.html?cat=AI" id="nav-AI">AI</a>
@@ -448,7 +448,13 @@
   }
 
   // ── 초기화 ──
-  selectCat(initCat);
+  (window.dtSyncPromise || Promise.resolve()).finally(() => {
+    try {
+      allArticles = JSON.parse(localStorage.getItem('dt_articles') || '[]')
+        .filter(a => a.status === '발행');
+    } catch(e) { allArticles = []; }
+    selectCat(initCat);
+  });
 </script>
 </body>
 </html>

@@ -300,7 +300,7 @@
         }
       } catch(e) { console.warn('Supabase 동기화 오류:', e); }
     }
-    syncArticles();
+    window.dtSyncPromise = syncArticles();
   </script>
 </head>
 <body>
@@ -317,7 +317,7 @@
   </div>
   <nav class="site-nav">
     <div class="nav-inner">
-      <a href="index-v5.html" class="active">전체</a>
+      <a href="index.html" class="active">전체</a>
       <a href="category.html?cat=마음">마음</a>
       <a href="category.html?cat=경영">경영</a>
       <a href="category.html?cat=AI">AI</a>
@@ -500,7 +500,7 @@
     `${now.getFullYear()}년 ${now.getMonth()+1}월 ${now.getDate()}일 (${days[now.getDay()]})`;
 
   // LocalStorage 기사 이미지를 썸네일에 반영
-  (function() {
+  function applyArticleThumbnails() {
     try {
       const articles = JSON.parse(localStorage.getItem('dt_articles') || '[]')
         .filter(a => a.status === '발행' && a.image);
@@ -520,14 +520,8 @@
         }
       });
     } catch(e) {}
-  })();
-  document.querySelectorAll('.nav-inner a').forEach(a => {
-    a.addEventListener('click', function(e){
-      e.preventDefault();
-      document.querySelectorAll('.nav-inner a').forEach(x => x.classList.remove('active'));
-      this.classList.add('active');
-    });
-  });
+  }
+  (window.dtSyncPromise || Promise.resolve()).finally(applyArticleThumbnails);
 </script>
 </body>
 </html>
