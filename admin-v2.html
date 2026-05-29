@@ -1297,7 +1297,7 @@ JSON 형식:
   }
 
   // ── 저장 ──
-  function saveArticle(article) {
+  async function saveArticle(article) {
     const idx = articles.findIndex(a => a.id === article.id);
     if(idx >= 0) articles[idx] = article;
     else articles.unshift(article);
@@ -1317,6 +1317,7 @@ JSON 형식:
         date_str: article.dateStr,
       }, { onConflict: 'id' });
       if(error) console.warn('Supabase 저장 오류:', error.message);
+      else console.log('✅ Supabase 저장 완료');
     } catch(e) { console.warn('Supabase 연결 오류:', e); }
     editingId = null;
     updateStats();
@@ -1421,25 +1422,16 @@ JSON 형식:
   }
 
   // ── 기사 삭제 ──
-  function deleteArticle(id) {
+  async function deleteArticle(id) {
     if(!confirm('이 기사를 삭제하시겠습니까?')) return;
     articles = articles.filter(a => a.id !== id);
     localStorage.setItem('dt_articles', JSON.stringify(articles));
 
-    // Supabase 저장
+    // Supabase 삭제
     try {
-      const { error } = await _supabase.from('articles').upsert({
-        id: article.id,
-        title: article.title,
-        summary: article.summary,
-        body: article.body,
-        category: article.category,
-        image: article.image || '',
-        author: article.author,
-        status: article.status,
-        date_str: article.dateStr,
-      }, { onConflict: 'id' });
-      if(error) console.warn('Supabase 저장 오류:', error.message);
+      const { error } = await _supabase.from('articles').delete().eq('id', id);
+      if(error) console.warn('Supabase 삭제 오류:', error.message);
+      else console.log('✅ Supabase 삭제 완료');
     } catch(e) { console.warn('Supabase 연결 오류:', e); }
     renderList();
     updateStats();
