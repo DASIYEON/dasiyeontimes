@@ -270,6 +270,38 @@
       .footer-bottom { padding:12px 20px; flex-direction:column; gap:6px; }
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://lguvdtesdetteasnniif.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndXZkdGVzZGV0dGVhc25uaWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNzk1MjUsImV4cCI6MjA5NTY1NTUyNX0.SBUdAzeAwwJ-v2CVYBPdIvTyXLePWZuthNTmWdRjwig';
+    const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Supabase에서 기사 불러와서 LocalStorage에 동기화
+    async function syncArticles() {
+      try {
+        const { data, error } = await _supabase
+          .from('articles')
+          .select('*')
+          .order('id', { ascending: false });
+        if(error) throw error;
+        if(data && data.length > 0) {
+          const articles = data.map(a => ({
+            id: a.id,
+            title: a.title,
+            summary: a.summary,
+            body: a.body,
+            category: a.category,
+            image: a.image || '',
+            author: a.author,
+            status: a.status,
+            dateStr: a.date_str,
+          }));
+          localStorage.setItem('dt_articles', JSON.stringify(articles));
+        }
+      } catch(e) { console.warn('Supabase 동기화 오류:', e); }
+    }
+    syncArticles();
+  </script>
 </head>
 <body>
 
@@ -285,7 +317,7 @@
   </div>
   <nav class="site-nav">
     <div class="nav-inner">
-      <a href="index.html" class="active">전체</a>
+      <a href="index-v5.html" class="active">전체</a>
       <a href="category.html?cat=마음">마음</a>
       <a href="category.html?cat=경영">경영</a>
       <a href="category.html?cat=AI">AI</a>
@@ -490,7 +522,8 @@
     } catch(e) {}
   })();
   document.querySelectorAll('.nav-inner a').forEach(a => {
-    a.addEventListener('click', function(){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
       document.querySelectorAll('.nav-inner a').forEach(x => x.classList.remove('active'));
       this.classList.add('active');
     });

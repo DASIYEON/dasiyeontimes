@@ -444,6 +444,19 @@
     .empty-state .empty-icon { font-size:48px; margin-bottom:12px; opacity:0.4; }
     .empty-state p { font-size:14px; }
   </style>
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://lguvdtesdetteasnniif.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndXZkdGVzZGV0dGVhc25uaWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNzk1MjUsImV4cCI6MjA5NTY1NTUyNX0.SBUdAzeAwwJ-v2CVYBPdIvTyXLePWZuthNTmWdRjwig';
+    const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  </script>
+  <script>
+    // 로그인 체크 — 미인증 시 로그인 페이지로
+    if(sessionStorage.getItem('dt_admin') !== 'true') {
+      location.replace('admin.html');
+    }
+  </script>
 </head>
 <body>
 
@@ -454,7 +467,7 @@
     <span>관리자</span>
   </div>
   <div class="admin-header-right">
-    <a href="index.html" class="view-site-btn" target="_blank">← 사이트 보기</a>
+    <a href="index-v5.html" class="view-site-btn" target="_blank">← 사이트 보기</a>
   </div>
 </header>
 
@@ -1289,6 +1302,22 @@ JSON 형식:
     if(idx >= 0) articles[idx] = article;
     else articles.unshift(article);
     localStorage.setItem('dt_articles', JSON.stringify(articles));
+
+    // Supabase 저장
+    try {
+      const { error } = await _supabase.from('articles').upsert({
+        id: article.id,
+        title: article.title,
+        summary: article.summary,
+        body: article.body,
+        category: article.category,
+        image: article.image || '',
+        author: article.author,
+        status: article.status,
+        date_str: article.dateStr,
+      }, { onConflict: 'id' });
+      if(error) console.warn('Supabase 저장 오류:', error.message);
+    } catch(e) { console.warn('Supabase 연결 오류:', e); }
     editingId = null;
     updateStats();
   }
@@ -1396,6 +1425,22 @@ JSON 형식:
     if(!confirm('이 기사를 삭제하시겠습니까?')) return;
     articles = articles.filter(a => a.id !== id);
     localStorage.setItem('dt_articles', JSON.stringify(articles));
+
+    // Supabase 저장
+    try {
+      const { error } = await _supabase.from('articles').upsert({
+        id: article.id,
+        title: article.title,
+        summary: article.summary,
+        body: article.body,
+        category: article.category,
+        image: article.image || '',
+        author: article.author,
+        status: article.status,
+        date_str: article.dateStr,
+      }, { onConflict: 'id' });
+      if(error) console.warn('Supabase 저장 오류:', error.message);
+    } catch(e) { console.warn('Supabase 연결 오류:', e); }
     renderList();
     updateStats();
     showToast('🗑️ 삭제되었습니다.', '');
