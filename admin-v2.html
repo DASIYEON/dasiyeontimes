@@ -830,6 +830,32 @@
   let editingId = null;
   let currentFilter = 'all';
 
+  // ── Supabase에서 기사 목록 불러오기 (실제 DB 기준) ──
+  async function loadArticles() {
+    try {
+      const { data, error } = await _supabase
+        .from('articles').select('*').order('id', { ascending:false });
+      if(error) { console.warn('목록 로딩 실패:', error.message); return; }
+      articles = (data || []).map(a => ({
+        id: a.id,
+        title: a.title || '',
+        summary: a.summary || '',
+        body: a.body || '',
+        category: a.category || '',
+        image: a.image || '',
+        author: a.author || '최형규',
+        status: a.status || '발행',
+        date: a.created_at || '',
+        dateStr: a.date_str || ''
+      }));
+      localStorage.setItem('dt_articles', JSON.stringify(articles));
+      updateStats();
+      var listPanel = document.getElementById('panel-list');
+      if(listPanel && listPanel.classList.contains('active')) renderList();
+    } catch(e) { console.warn('목록 로딩 연결 오류:', e); }
+  }
+  window.addEventListener('DOMContentLoaded', loadArticles);
+
   // ── 탭 전환 ──
   function switchTab(name, el) {
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -1277,34 +1303,52 @@ JSON 형식:
   }
 
   // ── 발행 ──
-  function publishArticle() {
+  async function publishArticle() {
     if(!validate()) return;
     const article = collectData('발행');
-    saveArticle(article);
-    showToast('✅ 기사가 발행되었습니다!', 'success');
-    clearForm();
-    document.getElementById('status-text').textContent = '발행 완료';
+    const status = document.getElementById('status-text');
+    status.style.color = '';
+    status.textContent = '저장 중…';
+    const res = await saveArticle(article);
+    if(res.ok) {
+      showToast('✅ DB 저장 완료 · 사이트 반영 완료!', 'success');
+      status.style.color = '#1e7d4f';
+      status.textContent = '발행 완료 (사이트에 반영됨)';
+      clearForm();
+      renderList();
+    } else {
+      showToast('❌ 저장 실패: ' + res.message, 'error');
+      status.style.color = '#c0392b';
+      status.textContent = '❌ 저장 실패: ' + res.message;
+    }
   }
 
   // ── 임시저장 ──
-  function saveDraft() {
+  async function saveDraft() {
     if(!document.getElementById('art-title').value.trim()) {
       showToast('제목을 입력해주세요.', 'error'); return;
     }
     const article = collectData('임시저장');
-    saveArticle(article);
-    showToast('💾 임시저장 되었습니다.', '');
+    const status = document.getElementById('status-text');
+    status.style.color = '';
+    status.textContent = '저장 중…';
+    const res = await saveArticle(article);
+    if(res.ok) {
+      showToast('💾 임시저장 완료 (DB 저장됨).', 'success');
+      status.style.color = '#1e7d4f';
+      status.textContent = '임시저장 완료';
+      renderList();
+    } else {
+      showToast('❌ 저장 실패: ' + res.message, 'error');
+      status.style.color = '#c0392b';
+      status.textContent = '❌ 저장 실패: ' + res.message;
+    }
   }
 
-  // ── 저장 ──
+  // ── 저장 (Supabase 우선 + 실제 저장 검증) ──
   async function saveArticle(article) {
-    const idx = articles.findIndex(a => a.id === article.id);
-    if(idx >= 0) articles[idx] = article;
-    else articles.unshift(article);
-    localStorage.setItem('dt_articles', JSON.stringify(articles));
-
-    // Supabase 저장
     try {
+      // 1) DB 저장 시도
       const { error } = await _supabase.from('articles').upsert({
         id: article.id,
         title: article.title,
@@ -1316,11 +1360,25 @@ JSON 형식:
         status: article.status,
         date_str: article.dateStr,
       }, { onConflict: 'id' });
-      if(error) console.warn('Supabase 저장 오류:', error.message);
-      else console.log('✅ Supabase 저장 완료');
-    } catch(e) { console.warn('Supabase 연결 오류:', e); }
-    editingId = null;
-    updateStats();
+      if(error) return { ok:false, message: error.message };
+
+      // 2) 저장 검증 — 방금 넣은 id를 DB에서 다시 읽어 확인
+      const { data: check, error: checkErr } = await _supabase
+        .from('articles').select('id').eq('id', article.id).maybeSingle();
+      if(checkErr) return { ok:false, message: checkErr.message };
+      if(!check)   return { ok:false, message: 'DB에 기록되지 않았습니다 (검증 실패).' };
+
+      // 3) 성공했을 때만 메모리/보조저장 갱신
+      const idx = articles.findIndex(a => a.id === article.id);
+      if(idx >= 0) articles[idx] = article;
+      else articles.unshift(article);
+      localStorage.setItem('dt_articles', JSON.stringify(articles));
+      editingId = null;
+      updateStats();
+      return { ok:true };
+    } catch(e) {
+      return { ok:false, message: (e && e.message) ? e.message : '연결 오류 (네트워크 또는 Supabase 일시정지)' };
+    }
   }
 
   // ── 폼 초기화 ──
@@ -1433,6 +1491,7 @@ JSON 형식:
       if(error) console.warn('Supabase 삭제 오류:', error.message);
       else console.log('✅ Supabase 삭제 완료');
     } catch(e) { console.warn('Supabase 연결 오류:', e); }
+    await loadArticles();
     renderList();
     updateStats();
     showToast('🗑️ 삭제되었습니다.', '');
