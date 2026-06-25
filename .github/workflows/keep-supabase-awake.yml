@@ -1,0 +1,29 @@
+name: Keep Supabase Awake
+
+on:
+  schedule:
+    - cron: '17 14 * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase (read-only)
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          echo "Supabase 휴면 방지 핑을 보냅니다..."
+          HTTP_CODE=$(curl -s -o /tmp/resp.txt -w "%{http_code}" \
+            "${SUPABASE_URL}/rest/v1/articles?select=id&limit=1" \
+            -H "apikey: ${SUPABASE_ANON_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}")
+          echo "HTTP 상태 코드: ${HTTP_CODE}"
+          echo "응답 내용: $(cat /tmp/resp.txt)"
+          if [ "${HTTP_CODE}" -ge 200 ] && [ "${HTTP_CODE}" -lt 300 ]; then
+            echo "✅ 성공: Supabase가 깨어 있습니다."
+          else
+            echo "❌ 실패: Supabase 응답이 비정상입니다 (코드 ${HTTP_CODE})."
+            exit 1
+          fi
