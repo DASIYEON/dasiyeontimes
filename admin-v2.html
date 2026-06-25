@@ -708,6 +708,7 @@
               <div class="status-dot status-draft"></div>
               <span id="status-text">임시저장 상태</span>
             </div>
+            <button class="btn btn-secondary" onclick="openPreview()" style="margin-bottom:8px;">👁️ 미리보기</button>
             <button class="btn btn-primary" onclick="publishArticle()">🚀 발행하기</button>
             <button class="btn btn-secondary" onclick="saveDraft()">💾 임시저장</button>
           </div>
@@ -1311,10 +1312,11 @@ JSON 형식:
     status.textContent = '저장 중…';
     const res = await saveArticle(article);
     if(res.ok) {
-      showToast('✅ DB 저장 완료 · 사이트 반영 완료!', 'success');
-      status.style.color = '#1e7d4f';
-      status.textContent = '발행 완료 (사이트에 반영됨)';
       clearForm();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      showToast('✅ 발행 완료 · 사이트에 반영됐어요! 새 글을 작성하세요.', 'success');
+      status.style.color = '#1e7d4f';
+      status.textContent = '발행 완료 · 새 기사 작성 가능';
       renderList();
     } else {
       showToast('❌ 저장 실패: ' + res.message, 'error');
@@ -1388,12 +1390,37 @@ JSON 형식:
     document.getElementById('art-body').innerHTML = '';
     document.getElementById('art-img-url').value = '';
     document.getElementById('art-author').value = '최형규';
-    document.querySelector('input[name="category"]:checked') &&
-      (document.querySelector('input[name="category"]:checked').checked = false);
+    document.querySelectorAll('input[name="category"]').forEach(r => r.checked = false);
     document.getElementById('char-count').textContent = '0자';
-    document.getElementById('status-text').textContent = '임시저장 상태';
     removeImage();
     editingId = null;
+  }
+
+  // ── 발행 전 미리보기 ──
+  function pvEscape(s){return String(s==null?'':s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
+  function openPreview() {
+    const title = document.getElementById('art-title').value.trim();
+    if(!title) { showToast('제목을 입력해주세요.', 'error'); return; }
+    const a = collectData('발행');
+    const emoji = ({'마음':'🌿','경영':'📊','AI':'🤖','컬럼':'✍️'})[a.category] || '📄';
+    const hero = a.image
+      ? `<div class="pv-hero"><img src="${a.image}" alt=""></div>`
+      : `<div class="pv-hero pv-ph">${emoji}</div>`;
+    document.getElementById('preview-content').innerHTML =
+      `<span class="pv-cat">${pvEscape(a.category || '미분류')}</span>`
+      + `<h1 class="pv-title">${pvEscape(a.title)}</h1>`
+      + `<p class="pv-summary">${pvEscape(a.summary)}</p>`
+      + `<div class="pv-meta">${pvEscape(a.author)} · ${pvEscape(a.dateStr)}</div>`
+      + hero
+      + `<div class="pv-body">${a.body || '<p>(본문 없음)</p>'}</div>`;
+    document.getElementById('preview-modal').style.display = 'flex';
+  }
+  function closePreview() {
+    document.getElementById('preview-modal').style.display = 'none';
+  }
+  function publishFromPreview() {
+    closePreview();
+    publishArticle();
   }
 
   // ── 기사 목록 렌더링 ──
@@ -1578,5 +1605,35 @@ JSON 형식:
   // ── 초기화 ──
   updateStats();
 </script>
+<!-- 발행 전 미리보기 모달 -->
+<div id="preview-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(20,28,48,.55);align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 16px;" onclick="if(event.target===this)closePreview()">
+  <div style="background:#fff;max-width:760px;width:100%;border-radius:4px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3);">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:#1f2d4e;color:#fff;">
+      <strong style="font-size:14px;">👁️ 발행 전 미리보기 — 실제 기사 화면</strong>
+      <button onclick="closePreview()" style="background:none;border:0;color:#fff;font-size:18px;cursor:pointer;line-height:1;">✕</button>
+    </div>
+    <div id="preview-content" style="padding:32px 36px;max-height:62vh;overflow-y:auto;"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;padding:16px 20px;border-top:1px solid #e8e3d8;background:#faf8f3;">
+      <button onclick="closePreview()" style="padding:10px 20px;border:1px solid #c9c2b4;background:#fff;cursor:pointer;font-family:inherit;font-size:13px;">계속 수정</button>
+      <button onclick="publishFromPreview()" style="padding:10px 22px;border:0;background:#1f2d4e;color:#fff;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;">🚀 이대로 발행</button>
+    </div>
+  </div>
+</div>
+<style>
+  #preview-content .pv-cat{display:inline-block;background:#1f2d4e;color:#fff;font-size:11px;padding:4px 10px;border-radius:2px;margin-bottom:14px;}
+  #preview-content .pv-title{font-size:28px;line-height:1.5;color:#1f2d4e;margin:0 0 14px;font-weight:700;}
+  #preview-content .pv-summary{font-size:15px;color:#555;line-height:1.8;margin:0 0 16px;padding-bottom:16px;border-bottom:1px solid #e8e3d8;}
+  #preview-content .pv-meta{font-size:12px;color:#999;margin-bottom:20px;}
+  #preview-content .pv-hero{margin:0 0 24px;}
+  #preview-content .pv-hero img{width:100%;max-height:380px;object-fit:cover;display:block;}
+  #preview-content .pv-ph{height:240px;display:flex;align-items:center;justify-content:center;font-size:64px;background:#f3efe6;}
+  #preview-content .pv-body{font-size:16px;line-height:2;color:#333;}
+  #preview-content .pv-body p{margin:0 0 1.3em;}
+  #preview-content .pv-body h2{font-size:21px;color:#1f2d4e;margin:1.6em 0 .6em;}
+  #preview-content .pv-body h3{font-size:18px;color:#1f2d4e;margin:1.4em 0 .5em;}
+  #preview-content .pv-body blockquote{border-left:3px solid #c8a96a;padding:12px 18px;background:#fdf9f2;margin:1.4em 0;}
+  #preview-content .pv-body img{max-width:100%;height:auto;margin:.6em 0;}
+  #preview-content .pv-body ul,#preview-content .pv-body ol{padding-left:1.4em;margin:0 0 1.3em;}
+</style>
 </body>
 </html>
