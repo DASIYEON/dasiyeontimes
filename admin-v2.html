@@ -446,6 +446,8 @@
   </style>
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
   <script>
     const SUPABASE_URL = 'https://lguvdtesdetteasnniif.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndXZkdGVzZGV0dGVhc25uaWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNzk1MjUsImV4cCI6MjA5NTY1NTUyNX0.SBUdAzeAwwJ-v2CVYBPdIvTyXLePWZuthNTmWdRjwig';
@@ -753,6 +755,20 @@
 
 <!-- 토스트 -->
 <div class="toast" id="toast"></div>
+
+<!-- 이미지 자르기(크롭) 모달 -->
+<div id="crop-modal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(20,28,48,.7);align-items:center;justify-content:center;padding:24px;">
+  <div style="background:#fff;max-width:660px;width:100%;border-radius:6px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.35);">
+    <div style="padding:14px 20px;background:#1f2d4e;color:#fff;font-size:13px;font-weight:600;line-height:1.6;">🖼️ 이미지 자르기 — 박스를 움직이거나 사진을 확대해서 <b>보여줄 부분</b>을 정하세요 (16:9 비율)</div>
+    <div style="padding:16px;background:#f3f1ec;">
+      <div style="max-height:54vh;"><img id="crop-image" style="max-width:100%;display:block;"></div>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;padding:14px 20px;border-top:1px solid #e8e3d8;background:#faf8f3;">
+      <button onclick="cancelCrop()" style="padding:9px 18px;border:1px solid #c9c2b4;background:#fff;cursor:pointer;font-family:inherit;font-size:13px;">취소</button>
+      <button id="crop-apply-btn" onclick="applyCrop()" style="padding:9px 22px;border:0;background:#1f2d4e;color:#fff;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;">✓ 적용</button>
+    </div>
+  </div>
+</div>
 
 <style>
   /* 에디터 내부 스타일 */
@@ -1566,31 +1582,58 @@ JSON 형식:
     if(file.size > 50 * 1024 * 1024) {
       showToast('이미지 크기가 50MB를 초과합니다.', 'error'); return;
     }
-    const prev = document.getElementById('img-preview');
-    const bar  = document.getElementById('img-filename-bar');
-    const txt  = document.getElementById('img-filename-text');
+    openCropper(file);   // 바로 업로드하지 않고 '자르기' 창을 먼저 연다
+  }
 
-    // 1) 즉시 로컬 미리보기 (화면 표시용 — 저장은 안 함)
-    const localUrl = URL.createObjectURL(file);
-    prev.src = localUrl;
-    prev.style.display = 'block';
-    document.getElementById('img-placeholder').style.display = 'none';
-    document.getElementById('img-upload-area').classList.add('has-image');
-    bar.style.display = 'flex';
-    txt.textContent = '⏳ 업로드 중… ' + file.name;
-    document.getElementById('art-img-url').value = '';
-
-    // 2) Storage 업로드 → 성공하면 진짜 URL을 미리보기/저장값으로 교체
-    const res = await uploadImageToStorage(file);
-    if(res.ok) {
-      prev.src = res.url;
-      document.getElementById('art-img-url').value = res.url;
-      txt.textContent = '✅ ' + file.name;
-    } else {
-      txt.textContent = '❌ 업로드 실패: ' + res.message;
-      showToast('❌ 이미지 업로드 실패: ' + res.message, 'error');
-      removeImage();
-    }
+  // ── 이미지 자르기(크롭) ──
+  let _cropper = null, _cropFileName = 'image.jpg';
+  function openCropper(file) {
+    _cropFileName = file.name || 'image.jpg';
+    const img = document.getElementById('crop-image');
+    if(_cropper) { _cropper.destroy(); _cropper = null; }
+    img.onload = function() {
+      if(_cropper) { _cropper.destroy(); }
+      _cropper = new Cropper(img, {
+        aspectRatio: 16/9, viewMode: 1, autoCropArea: 1,
+        movable: true, zoomable: true, scalable: false, rotatable: false,
+        background: false, responsive: true
+      });
+    };
+    img.src = URL.createObjectURL(file);
+    document.getElementById('crop-modal').style.display = 'flex';
+  }
+  function cancelCrop() {
+    if(_cropper) { _cropper.destroy(); _cropper = null; }
+    document.getElementById('crop-modal').style.display = 'none';
+    document.getElementById('img-file-input').value = '';
+  }
+  async function applyCrop() {
+    if(!_cropper) return;
+    const applyBtn = document.getElementById('crop-apply-btn');
+    const canvas = _cropper.getCroppedCanvas({ width:1280, height:720, imageSmoothingQuality:'high' });
+    if(!canvas) { showToast('이미지 처리 실패', 'error'); return; }
+    applyBtn.disabled = true; applyBtn.textContent = '업로드 중…';
+    canvas.toBlob(async function(blob) {
+      if(!blob) { applyBtn.disabled=false; applyBtn.textContent='✓ 적용'; showToast('이미지 처리 실패','error'); return; }
+      const base = (_cropFileName.replace(/\.[^.]+$/,'') || 'image');
+      const croppedFile = new File([blob], base + '.jpg', { type:'image/jpeg' });
+      const res = await uploadImageToStorage(croppedFile);
+      applyBtn.disabled = false; applyBtn.textContent = '✓ 적용';
+      if(res.ok) {
+        const prev = document.getElementById('img-preview');
+        prev.src = res.url; prev.style.display = 'block';
+        document.getElementById('img-placeholder').style.display = 'none';
+        document.getElementById('img-upload-area').classList.add('has-image');
+        document.getElementById('img-filename-bar').style.display = 'flex';
+        document.getElementById('img-filename-text').textContent = '✅ ' + _cropFileName;
+        document.getElementById('art-img-url').value = res.url;
+        showToast('이미지 업로드 완료', 'success');
+      } else {
+        showToast('❌ 업로드 실패: ' + res.message, 'error');
+      }
+      if(_cropper) { _cropper.destroy(); _cropper = null; }
+      document.getElementById('crop-modal').style.display = 'none';
+    }, 'image/jpeg', 0.9);
   }
 
   function handleUrlInput(url) {
