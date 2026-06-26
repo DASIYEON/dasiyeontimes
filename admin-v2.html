@@ -450,6 +450,21 @@
     const SUPABASE_URL = 'https://lguvdtesdetteasnniif.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndXZkdGVzZGV0dGVhc25uaWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNzk1MjUsImV4cCI6MjA5NTY1NTUyNX0.SBUdAzeAwwJ-v2CVYBPdIvTyXLePWZuthNTmWdRjwig';
     const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // ── 이미지를 Supabase Storage에 업로드하고 공개 URL을 돌려줌 ──
+    // (base64로 글에 욱여넣지 않으므로 localStorage 용량 초과 문제가 사라짐)
+    const STORAGE_BUCKET = 'article-images';
+    async function uploadImageToStorage(file) {
+      if(!file) return { ok:false, message:'파일이 없습니다.' };
+      const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+      const path = `${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
+      const { error } = await _supabase.storage
+        .from(STORAGE_BUCKET)
+        .upload(path, file, { cacheControl:'3600', upsert:false, contentType:file.type });
+      if(error) return { ok:false, message: error.message };
+      const { data } = _supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+      return { ok:true, url: data.publicUrl };
+    }
   </script>
   <script>
     // 로그인 체크 — 미인증 시 로그인 페이지로
@@ -690,8 +705,8 @@
               oninput="handleUrlInput(this.value)">
 
             <p style="font-size:10px;color:var(--text-light);margin-top:8px;line-height:1.7;">
-              💡 Supabase 연동 후 업로드 이미지가 자동 저장됩니다.<br>
-              현재는 미리보기 및 URL 저장으로 동작합니다.
+              💡 이미지를 선택하면 Supabase 저장소에 자동 업로드되고<br>
+              주소만 기사에 저장됩니다. (용량 걱정 없음)
             </p>
           </div>
 
@@ -1210,30 +1225,32 @@ JSON 형식:
     reader.readAsDataURL(file);
   }
 
-  function confirmModal() {
+  async function confirmModal() {
     if(modalMode === 'image') {
       const fileInput = document.getElementById('modal-img-file');
       const urlInput  = document.getElementById('modal-img-url').value.trim();
       const caption   = document.getElementById('modal-img-caption').value.trim();
-      let src = '';
 
       if(fileInput.files[0]) {
-        // 파일 선택한 경우 → Base64 읽어서 삽입
-        const reader = new FileReader();
-        reader.onload = e => {
-          src = e.target.result;
-          insertImageHTML(src, caption);
-        };
-        reader.readAsDataURL(fileInput.files[0]);
-        closeModal();
-        return;
+        // 파일 선택한 경우 → Storage에 업로드하고 URL만 본문에 삽입
+        const confirmBtn = document.getElementById('modal-confirm-btn');
+        const prevLabel = confirmBtn.textContent;
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = '업로드 중…';
+        const res = await uploadImageToStorage(fileInput.files[0]);
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = prevLabel;
+        if(!res.ok) {
+          showToast('❌ 이미지 업로드 실패: ' + res.message, 'error');
+          return;
+        }
+        insertImageHTML(res.url, caption);
       } else if(urlInput) {
-        src = urlInput;
+        insertImageHTML(urlInput, caption);
       } else {
         showToast('이미지 URL을 입력하거나 파일을 선택해주세요.', 'error');
         return;
       }
-      insertImageHTML(src, caption);
 
     } else if(modalMode === 'link') {
       const text = document.getElementById('modal-link-text').value.trim();
@@ -1288,7 +1305,9 @@ JSON 형식:
   function collectData(status) {
     const imgUrl = document.getElementById('art-img-url').value.trim();
     const imgPreviewSrc = document.getElementById('img-preview').src;
-    const finalImg = imgUrl || (imgPreviewSrc && imgPreviewSrc !== window.location.href ? imgPreviewSrc : '');
+    // blob:/data: 는 임시 미리보기용이라 절대 저장하지 않는다 (DB엔 진짜 URL만)
+    const isTemp = s => !s || s.startsWith('blob:') || s.startsWith('data:') || s === window.location.href;
+    const finalImg = imgUrl || (isTemp(imgPreviewSrc) ? '' : imgPreviewSrc);
     return {
       id:       editingId || Date.now(),
       title:    document.getElementById('art-title').value.trim(),
@@ -1539,25 +1558,39 @@ JSON 형식:
     document.getElementById('stat-draft').textContent = articles.filter(a => a.status === '임시저장').length;
   }
 
-  // ── 이미지 처리 ──
-  function handleImageSelect(input) {
+  // ── 이미지 처리 (썸네일) ──
+  // 파일을 Supabase Storage에 올리고, 기사에는 그 공개 URL만 저장한다.
+  async function handleImageSelect(input) {
     const file = input.files[0];
     if(!file) return;
     if(file.size > 50 * 1024 * 1024) {
       showToast('이미지 크기가 50MB를 초과합니다.', 'error'); return;
     }
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const prev = document.getElementById('img-preview');
-      prev.src = e.target.result;
-      prev.style.display = 'block';
-      document.getElementById('img-placeholder').style.display = 'none';
-      document.getElementById('img-upload-area').classList.add('has-image');
-      document.getElementById('img-filename-bar').style.display = 'flex';
-      document.getElementById('img-filename-text').textContent = file.name;
-      document.getElementById('art-img-url').value = '';
-    };
-    reader.readAsDataURL(file);
+    const prev = document.getElementById('img-preview');
+    const bar  = document.getElementById('img-filename-bar');
+    const txt  = document.getElementById('img-filename-text');
+
+    // 1) 즉시 로컬 미리보기 (화면 표시용 — 저장은 안 함)
+    const localUrl = URL.createObjectURL(file);
+    prev.src = localUrl;
+    prev.style.display = 'block';
+    document.getElementById('img-placeholder').style.display = 'none';
+    document.getElementById('img-upload-area').classList.add('has-image');
+    bar.style.display = 'flex';
+    txt.textContent = '⏳ 업로드 중… ' + file.name;
+    document.getElementById('art-img-url').value = '';
+
+    // 2) Storage 업로드 → 성공하면 진짜 URL을 미리보기/저장값으로 교체
+    const res = await uploadImageToStorage(file);
+    if(res.ok) {
+      prev.src = res.url;
+      document.getElementById('art-img-url').value = res.url;
+      txt.textContent = '✅ ' + file.name;
+    } else {
+      txt.textContent = '❌ 업로드 실패: ' + res.message;
+      showToast('❌ 이미지 업로드 실패: ' + res.message, 'error');
+      removeImage();
+    }
   }
 
   function handleUrlInput(url) {
