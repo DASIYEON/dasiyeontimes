@@ -611,7 +611,10 @@
           </div>
 
           <div class="editor-card" style="margin-bottom:20px;">
-            <h3>기사 작성</h3>
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">
+              <span>기사 작성</span>
+              <button type="button" onclick="openImportModal()" style="padding:7px 14px;border:1px solid #c8a96a;background:#fdf9f2;color:#8a6d2f;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;border-radius:3px;">📥 Claude 기사 가져오기</button>
+            </h3>
 
             <div class="form-group">
               <label class="form-label">제목 <span class="required">*</span></label>
@@ -1711,5 +1714,105 @@ JSON 형식:
   #preview-content .pv-body img{max-width:100%;height:auto;margin:.6em 0;}
   #preview-content .pv-body ul,#preview-content .pv-body ol{padding-left:1.4em;margin:0 0 1.3em;}
 </style>
+
+<!-- ── Claude 기사 JSON 가져오기 모달 ── -->
+<div id="import-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(20,28,48,.55);align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 16px;" onclick="if(event.target===this)closeImportModal()">
+  <div style="background:#fff;max-width:680px;width:100%;border-radius:4px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3);">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:#1f2d4e;color:#fff;">
+      <strong style="font-size:14px;">📥 Claude 기사 가져오기 — JSON 붙여넣기</strong>
+      <button onclick="closeImportModal()" style="background:none;border:0;color:#fff;font-size:18px;cursor:pointer;line-height:1;">✕</button>
+    </div>
+    <div style="padding:20px 24px;">
+      <p style="margin:0 0 12px;font-size:13px;color:#555;line-height:1.7;">
+        Claude가 납품한 기사 JSON을 아래에 붙여넣고 <strong>채우기</strong>를 누르세요.<br>
+        제목·요약·본문·카테고리·작성자가 한 번에 자동 입력됩니다. 발행은 여전히 직접 확인 후 진행합니다.
+      </p>
+      <textarea id="import-json" placeholder='{"title":"...","summary":"...","category":"경영","body":"<p>...</p>","author":"최형규"}' style="width:100%;min-height:220px;padding:12px;border:1px solid #c9c2b4;border-radius:3px;font-family:monospace;font-size:12px;line-height:1.6;resize:vertical;box-sizing:border-box;"></textarea>
+      <div id="import-error" style="display:none;margin-top:10px;padding:10px 12px;background:#fdf0f0;border:1px solid #e0b4b4;color:#a33;font-size:12px;line-height:1.6;border-radius:3px;"></div>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;padding:16px 20px;border-top:1px solid #e8e3d8;background:#faf8f3;">
+      <button onclick="closeImportModal()" style="padding:10px 20px;border:1px solid #c9c2b4;background:#fff;cursor:pointer;font-family:inherit;font-size:13px;">취소</button>
+      <button onclick="applyImport()" style="padding:10px 22px;border:0;background:#1f2d4e;color:#fff;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;">✓ 채우기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Claude 기사 JSON 가져오기 ──
+  function openImportModal() {
+    document.getElementById('import-json').value = '';
+    document.getElementById('import-error').style.display = 'none';
+    document.getElementById('import-modal').style.display = 'flex';
+    document.getElementById('import-json').focus();
+  }
+  function closeImportModal() {
+    document.getElementById('import-modal').style.display = 'none';
+  }
+  function showImportError(msg) {
+    const box = document.getElementById('import-error');
+    box.textContent = '❌ ' + msg;
+    box.style.display = 'block';
+  }
+  function applyImport() {
+    const raw = document.getElementById('import-json').value.trim();
+    if (!raw) { showImportError('붙여넣은 내용이 없습니다.'); return; }
+
+    // ```json 코드 펜스가 섞여 들어와도 관대하게 처리
+    const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '').trim();
+
+    let data;
+    try {
+      data = JSON.parse(cleaned);
+    } catch (e) {
+      showImportError('JSON 형식이 잘못되었습니다: ' + e.message + ' — Claude에게 "기사 JSON으로 다시 줘"라고 요청하세요.');
+      return;
+    }
+
+    if (!data.title || !data.body) {
+      showImportError('필수 항목(title, body)이 없습니다. 현재 키: ' + Object.keys(data).join(', '));
+      return;
+    }
+
+    // 기존 작성 내용이 있으면 덮어쓰기 확인
+    const hasExisting = document.getElementById('art-title').value.trim() || document.getElementById('art-body').textContent.trim();
+    if (hasExisting && !confirm('작성 중인 내용이 있습니다. 가져온 기사로 덮어쓸까요?')) return;
+
+    // 필드 채우기
+    document.getElementById('art-title').value = data.title;
+    document.getElementById('art-summary').value = data.summary || '';
+
+    // 서브헤드라인이 있으면 본문 맨 앞에 강조 문단으로 삽입
+    let bodyHtml = data.body;
+    if (data.subtitle) {
+      bodyHtml = '<p><strong>' + data.subtitle + '</strong></p>' + bodyHtml;
+    }
+    document.getElementById('art-body').innerHTML = bodyHtml;
+
+    // 카테고리 라디오 선택
+    if (data.category) {
+      const catRadio = document.getElementById('cat-' + data.category);
+      if (catRadio) { catRadio.checked = true; }
+      else { showImportError('알 수 없는 카테고리 "' + data.category + '" — 마음/경영/AI/컬럼 중 직접 선택해 주세요. (나머지 필드는 채워졌습니다)'); }
+    }
+
+    // 작성자 (값이 있을 때만 덮어씀)
+    if (data.author) { document.getElementById('art-author').value = data.author; }
+
+    // 썸네일 URL (있을 때만) — 기존 input 리스너가 있으면 함께 작동하도록 이벤트 발생
+    if (data.image_url) {
+      const imgInput = document.getElementById('art-img-url');
+      imgInput.value = data.image_url;
+      imgInput.dispatchEvent(new Event('input', { bubbles: true }));
+      imgInput.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    // 글자 수 갱신
+    const len = document.getElementById('art-body').textContent.length;
+    document.getElementById('char-count').textContent = len.toLocaleString() + '자';
+
+    closeImportModal();
+    showToast('✅ 기사 가져오기 완료 — 미리보기로 확인 후 발행하세요');
+  }
+</script>
 </body>
 </html>
