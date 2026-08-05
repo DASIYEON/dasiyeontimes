@@ -1,0 +1,31 @@
+name: Generate sitemap and RSS
+
+on:
+  schedule:
+    # 월·수·금 KST 23:00 (UTC 14:00) — 발행 후 검수 완료 시각 기준 반영
+    - cron: '0 14 * * 1,3,5'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  feeds:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate sitemap.xml and rss.xml
+        run: python3 scripts/generate_feeds.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name "dasiyeon-bot"
+          git config user.email "actions@github.com"
+          git add sitemap.xml rss.xml
+          if git diff --cached --quiet; then
+            echo "변경 없음 — 커밋 생략"
+          else
+            git commit -m "chore: sitemap/RSS 자동 갱신 ($(date +'%Y-%m-%d'))"
+            git push
+          fi
