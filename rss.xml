@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>다시연 타임즈</title>
+    <link>https://dasiyeontimes.kr/</link>
+    <description>회복과 성장의 미디어 — 마음·경영·AI·삶의 통찰을 전합니다</description>
+    <language>ko</language>
+    <atom:link href="https://dasiyeontimes.kr/rss.xml" rel="self" type="application/rss+xml"/>
+  </channel>
+</rss>
