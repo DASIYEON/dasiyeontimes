@@ -83,3 +83,11 @@ a{text-decoration:none;color:inherit}button,input{font:inherit}
 .article-body{font-size:16px;line-height:1.95}.article-hero{margin-left:-18px;margin-right:-18px}.related{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:28px;margin-top:36px}
 .list-card{grid-template-columns:120px 1fr;gap:16px}.list-img{height:90px}.list-body h2{font-size:18px;margin-top:4px}.list-body p{display:none}
 .footer-inner{grid-template-columns:1fr;gap:24px;padding:30px 20px 22px}.footer-legal{padding:16px 20px 24px}}
+
+/* ---- 모바일 메뉴 오픈 상태 (2026-08-10 hotfix) ---- */
+@media(max-width:820px){
+.nav.open{display:flex;position:absolute;top:68px;left:0;right:0;background:#fff;flex-direction:column;gap:0;padding:6px 18px 12px;border-bottom:1px solid var(--line);box-shadow:0 10px 24px rgba(0,0,0,.07)}
+.nav.open a{padding:14px 0;border-bottom:1px solid var(--line)}
+.nav.open a:last-child{border-bottom:0}
+.nav.open a.active{border-bottom-color:var(--line);color:var(--navy)}
+}

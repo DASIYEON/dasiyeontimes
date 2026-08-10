@@ -9,3 +9,22 @@ function norm(a){return{id:a.id,title:a.title||'제목 없음',summary:a.summary
 async function rest(q){const r=await fetch(REST_URL+'?'+q,{headers:HDR});if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}
 function artUrl(a){return `article.html?id=${encodeURIComponent(a.id)}`}
 function img(a){return a.image?`<img src="${esc(a.image)}" alt="" loading="lazy" decoding="async">`:''}
+
+/* ---- 모바일 메뉴 토글 (2026-08-10 hotfix) ---- */
+document.addEventListener('DOMContentLoaded',function(){
+  var t=document.querySelector('.menu-toggle'),n=document.querySelector('.nav');
+  if(t&&n)t.addEventListener('click',function(){n.classList.toggle('open');t.setAttribute('aria-expanded',n.classList.contains('open'))});
+});
+
+/* ---- 목록 캐시: stale-while-revalidate, 30분 TTL (성능 V2 복원) ---- */
+const CACHE_TTL=30*60*1000;
+function cacheSet(k,d){try{sessionStorage.setItem(k,JSON.stringify({t:Date.now(),d:d}))}catch(e){}}
+async function restCached(q){
+  const k='dt:'+q;let c=null;
+  try{c=JSON.parse(sessionStorage.getItem(k)||'null')}catch(e){}
+  if(c&&Array.isArray(c.d)){
+    if(Date.now()-c.t>CACHE_TTL){rest(q).then(d=>cacheSet(k,d)).catch(()=>{})}
+    return c.d;
+  }
+  const d=await rest(q);cacheSet(k,d);return d;
+}
