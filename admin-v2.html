@@ -462,7 +462,7 @@
       const path = `${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
       const { error } = await _supabase.storage
         .from(STORAGE_BUCKET)
-        .upload(path, file, { cacheControl:'3600', upsert:false, contentType:file.type });
+        .upload(path, file, { cacheControl:'31536000', upsert:false, contentType:file.type });
       if(error) return { ok:false, message: error.message };
       const { data } = _supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
       return { ok:true, url: data.publicUrl };

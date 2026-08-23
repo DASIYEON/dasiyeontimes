@@ -59,7 +59,7 @@ def build_sitemap(articles):
         out.append(f"  <url><loc>{SITE}/{path}</loc><lastmod>{today}</lastmod>"
                    f"<changefreq>{freq}</changefreq><priority>{pri}</priority></url>")
     for a in articles:
-        loc = f"{SITE}/article.html?id={a['id']}"
+        loc = f"{SITE}/articles/{a['id']}.html"
         lastmod = art_date(a).isoformat()
         out.append(f"  <url><loc>{html.escape(loc)}</loc><lastmod>{lastmod}</lastmod>"
                    f"<changefreq>monthly</changefreq><priority>0.7</priority></url>")
@@ -74,7 +74,7 @@ def build_rss(articles):
     now = rfc822(datetime.date.today())
     items = []
     for a in articles[:50]:
-        link = f"{SITE}/article.html?id={a['id']}"
+        link = f"{SITE}/articles/{a['id']}.html"
         title = html.escape(strip_html(a.get("title", ""), 200))
         desc = html.escape(strip_html(a.get("summary") or a.get("body", ""), 300))
         author = html.escape(strip_html(a.get("author", "다시연 타임즈"), 50))
