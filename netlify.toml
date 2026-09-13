@@ -12,3 +12,12 @@
   for = "/images/*"
   [headers.values]
     Cache-Control = "public, max-age=604800, stale-while-revalidate=2592000"
+
+# 2026-09-13 추가 — 구형 기사 링크(article.html?id=X)를 정적 기사 페이지로 영구 이동
+# 기존에 외부(카카오톡·SNS·검색)에 공유된 링크를 살린다.
+[[redirects]]
+  from = "/article.html"
+  query = { id = ":id" }
+  to = "/articles/:id.html"
+  status = 301
+  force = true
