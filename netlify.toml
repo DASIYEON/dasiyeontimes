@@ -21,3 +21,28 @@
   to = "/articles/:id.html"
   status = 301
   force = true
+
+
+# 메인 페이지의 중복 주소를 대표 주소로 통합
+[[redirects]]
+  from = "/index.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/index"
+  to = "/"
+  status = 301
+  force = true
+
+# 보관용 구형 메인은 검색 결과에서 제외(파일은 보존)
+[[headers]]
+  for = "/index-pre-static-backup*"
+  [headers.values]
+    X-Robots-Tag = "noindex, follow"
+
+[[headers]]
+  for = "/index-v5*"
+  [headers.values]
+    X-Robots-Tag = "noindex, follow"

@@ -111,7 +111,7 @@ def latest_html(arts):
         out.append(
             f'<article class="latest-item" onclick="location.href=\'{art_href(a)}\'">'
             f'<div class="latest-thumb">{thumb}</div><div>'
-            f'<div class="latest-title">{esc(a["title"])}</div>'
+            f'<div class="latest-title"><a href="{art_href(a)}">{esc(a["title"])}</a></div>'
             f'<div class="latest-meta"><span>{esc(a["date_str"])}</span>'
             f'<span class="latest-cat">{esc(a["category"])}</span></div></div></article>')
     return "".join(out)
@@ -125,7 +125,7 @@ def sections_html(arts):
         if cat == "컬럼":
             cards = "".join(
                 f'<article class="column-card" onclick="location.href=\'{art_href(a)}\'">'
-                f'<span class="tag">{cat}</span><h3>{esc(a["title"])}</h3><p>{esc(a["summary"])}</p>'
+                f'<span class="tag">{cat}</span><h3><a href="{art_href(a)}">{esc(a["title"])}</a></h3><p>{esc(a["summary"])}</p>'
                 f'<div class="meta">{esc(a["author"])} · {esc(a["date_str"])}</div></article>'
                 for a in arr)
             out.append(f'<section class="section"><div class="section-head"><h2>대표 칼럼</h2>'
@@ -137,7 +137,7 @@ def sections_html(arts):
                 f'<div class="card-img">'
                 + (f'<img src="{esc(a["image"])}" alt="" loading="lazy" decoding="async">' if a["image"] else "")
                 + f'</div><div class="card-body"><span class="tag">{cat}</span>'
-                f'<h3>{esc(a["title"])}</h3><p>{esc(a["summary"])}</p>'
+                f'<h3><a href="{art_href(a)}">{esc(a["title"])}</a></h3><p>{esc(a["summary"])}</p>'
                 f'<div class="meta">{esc(a["author"])} · {esc(a["date_str"])}</div></div></article>'
                 for a in arr)
             out.append(f'<section class="section"><div class="section-head"><h2>{cat}</h2>'
@@ -239,3 +239,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
