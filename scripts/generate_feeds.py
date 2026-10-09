@@ -11,7 +11,6 @@ SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 
 STATIC_PAGES = [
     ("", "daily", "1.0"),
-    ("about.html", "monthly", "0.5"),
     ("category.html?cat=%EB%A7%88%EC%9D%8C", "daily", "0.8"),
     ("category.html?cat=%EA%B2%BD%EC%98%81", "daily", "0.8"),
     ("category.html?cat=AI", "daily", "0.8"),
