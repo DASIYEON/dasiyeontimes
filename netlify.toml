@@ -1,3 +1,52 @@
+[build]
+  command = "npm test"
+  publish = "."
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  included_files = ["assets/site.js", "templates/*.html", "category.html"]
+
+# DB-backed HTML/XML: preserve article URLs, bypass stale generated files.
+[[redirects]]
+  from = "/"
+  to = "/.netlify/functions/live?mode=home"
+  status = 200
+  force = true
+[[redirects]]
+  from = "/articles/:id.html"
+  to = "/.netlify/functions/live?mode=article&id=:id"
+  status = 200
+  force = true
+[[redirects]]
+  from = "/articles/:id"
+  to = "/.netlify/functions/live?mode=article&id=:id"
+  status = 200
+  force = true
+[[redirects]]
+  from = "/category.html"
+  to = "/.netlify/functions/live?mode=category"
+  status = 200
+  force = true
+[[redirects]]
+  from = "/category"
+  to = "/.netlify/functions/live?mode=category"
+  status = 200
+  force = true
+[[redirects]]
+  from = "/rss.xml"
+  to = "/.netlify/functions/live?mode=rss"
+  status = 200
+  force = true
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/.netlify/functions/live?mode=sitemap"
+  status = 200
+  force = true
+
 # 다시연 타임즈 Netlify 설정
 # 캐시 정책: HTML은 항상 최신 확인(기본값 유지), 정적 자원은 브라우저 재검증 우선
 

@@ -1341,14 +1341,25 @@ JSON 형식:
     };
   }
 
+  let savingArticle = false;
+  function setSaving(value) {
+    savingArticle = value;
+    document.querySelectorAll('button[onclick="publishArticle()"],button[onclick="saveDraft()"],button[onclick="publishFromPreview()"]')
+      .forEach(button => { button.disabled = value; });
+  }
   // ── 발행 ──
   async function publishArticle() {
-    if(!validate()) return;
+    if(savingArticle || !validate()) return;
+    setSaving(true);
     const article = collectData('발행');
+    editingId = article.id;
     const status = document.getElementById('status-text');
     status.style.color = '';
     status.textContent = '저장 중…';
-    const res = await saveArticle(article);
+    let res;
+    try { res = await saveArticle(article); }
+    catch(e) { res = {ok:false,message:e.message || '연결 오류'}; }
+    finally { setSaving(false); }
     if(res.ok) {
       clearForm();
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1365,14 +1376,20 @@ JSON 형식:
 
   // ── 임시저장 ──
   async function saveDraft() {
+    if(savingArticle) return;
     if(!document.getElementById('art-title').value.trim()) {
       showToast('제목을 입력해주세요.', 'error'); return;
     }
+    setSaving(true);
     const article = collectData('임시저장');
+    editingId = article.id;
     const status = document.getElementById('status-text');
     status.style.color = '';
     status.textContent = '저장 중…';
-    const res = await saveArticle(article);
+    let res;
+    try { res = await saveArticle(article); }
+    catch(e) { res = {ok:false,message:e.message || '연결 오류'}; }
+    finally { setSaving(false); }
     if(res.ok) {
       showToast('💾 임시저장 완료 (DB 저장됨).', 'success');
       status.style.color = '#1e7d4f';
@@ -1413,7 +1430,7 @@ JSON 형식:
       if(idx >= 0) articles[idx] = article;
       else articles.unshift(article);
       localStorage.setItem('dt_articles', JSON.stringify(articles));
-      editingId = null;
+      editingId = article.id;
       updateStats();
       return { ok:true };
     } catch(e) {
