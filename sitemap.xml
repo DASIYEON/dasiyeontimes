@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://dasiyeontimes.kr/</loc><lastmod>2026-10-28</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
-  <url><loc>https://dasiyeontimes.kr/category.html?cat=%EB%A7%88%EC%9D%8C</loc><lastmod>2026-10-28</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
-  <url><loc>https://dasiyeontimes.kr/category.html?cat=%EA%B2%BD%EC%98%81</loc><lastmod>2026-10-28</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
-  <url><loc>https://dasiyeontimes.kr/category.html?cat=AI</loc><lastmod>2026-10-28</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
-  <url><loc>https://dasiyeontimes.kr/category.html?cat=%EC%BB%AC%EB%9F%BC</loc><lastmod>2026-10-28</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
-  <url><loc>https://dasiyeontimes.kr/ethics.html</loc><lastmod>2026-10-28</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://dasiyeontimes.kr/privacy.html</loc><lastmod>2026-10-28</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://dasiyeontimes.kr/terms.html</loc><lastmod>2026-10-28</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://dasiyeontimes.kr/youth.html</loc><lastmod>2026-10-28</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://dasiyeontimes.kr/</loc><lastmod>2026-10-30</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://dasiyeontimes.kr/category.html?cat=%EB%A7%88%EC%9D%8C</loc><lastmod>2026-10-30</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://dasiyeontimes.kr/category.html?cat=%EA%B2%BD%EC%98%81</loc><lastmod>2026-10-30</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://dasiyeontimes.kr/category.html?cat=AI</loc><lastmod>2026-10-30</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://dasiyeontimes.kr/category.html?cat=%EC%BB%AC%EB%9F%BC</loc><lastmod>2026-10-30</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://dasiyeontimes.kr/ethics.html</loc><lastmod>2026-10-30</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://dasiyeontimes.kr/privacy.html</loc><lastmod>2026-10-30</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://dasiyeontimes.kr/terms.html</loc><lastmod>2026-10-30</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://dasiyeontimes.kr/youth.html</loc><lastmod>2026-10-30</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://dasiyeontimes.kr/articles/1793365924301.html</loc><lastmod>2026-10-30</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://dasiyeontimes.kr/articles/1792683568915.html</loc><lastmod>2026-10-22</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://dasiyeontimes.kr/articles/1792169185386.html</loc><lastmod>2026-10-16</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://dasiyeontimes.kr/articles/1791950217657.html</loc><lastmod>2026-10-14</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
