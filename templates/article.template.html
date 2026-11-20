@@ -2,4 +2,90 @@
 /* 정적 페이지: Supabase 호출 없음. 공유 버튼 + 모바일 메뉴만 동작. */
 function share(){if(navigator.share)navigator.share({title:document.title,url:location.href});else navigator.clipboard?.writeText(location.href).then(()=>alert('링크가 복사되었습니다.'))}
 document.addEventListener('DOMContentLoaded',function(){var t=document.querySelector('.menu-toggle'),n=document.querySelector('.nav');if(t&&n)t.addEventListener('click',function(){n.classList.toggle('open');t.setAttribute('aria-expanded',n.classList.contains('open'))});});
-</script></body></html>
+</script><style>
+.article-body .card-reader{width:100%;max-width:30rem;margin:1rem auto 2rem;min-width:0}
+.card-controls{display:flex;align-items:center;justify-content:space-between;margin-bottom:.65rem;gap:.75rem}
+.card-controls button{width:44px;height:44px;border-radius:50%;background:white;color:#17283c;border:1px solid #81909e;font:600 1.2rem system-ui;cursor:pointer}
+.card-controls button:disabled{opacity:.34;cursor:default}
+.card-controls output{font:600 1rem system-ui;color:#17283c;font-variant-numeric:tabular-nums}
+.card-rail{display:flex;align-items:flex-start;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:thin}
+.article-body .card-rail>figure{box-sizing:border-box;flex:0 0 100%;width:100%;min-width:0;max-width:none;margin:0;padding:0;scroll-snap-align:start}
+.article-body .card-rail>figure img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:contain;margin:0;background:#f4f4f1}
+.article-body .card-rail figcaption{font-size:.9rem;line-height:1.55;margin:.5rem 0 .25rem;color:#394552}
+.card-reader :focus-visible{outline:3px solid #2769a4;outline-offset:-3px}
+@media print{.card-controls{display:none}.card-rail{display:block;overflow:visible}.article-body .card-rail>figure{break-inside:avoid}}
+</style>
+<script>
+(function () {
+  const headings = document.querySelectorAll('.article-body h2, .article-body h3');
+  let count = 0;
+  for (const heading of headings) {
+    if (heading.textContent.trim() !== '카드뉴스') continue;
+    const cards = [];
+    let sibling = heading.nextElementSibling;
+    while (sibling && sibling.matches('figure') && sibling.querySelector('img')) {
+      cards.push(sibling);
+      sibling = sibling.nextElementSibling;
+    }
+    if (!cards.length) continue;
+    count++;
+    heading.id ||= count === 1 ? 'cardnews' : 'cardnews-' + count;
+    if (cards.length === 1) continue;
+    const reader = document.createElement('section');
+    reader.className = 'card-reader';
+    reader.setAttribute('aria-labelledby', heading.id);
+    reader.setAttribute('aria-roledescription', '슬라이드');
+    const rail = document.createElement('div');
+    rail.className = 'card-rail';
+    rail.id = heading.id + '-slides';
+    rail.tabIndex = 0;
+    rail.setAttribute('role', 'group');
+    rail.setAttribute('aria-label', '좌우로 넘겨 읽는 카드뉴스');
+    const controls = document.createElement('div');
+    controls.className = 'card-controls';
+    function button(label, symbol) {
+      const el = document.createElement('button');
+      el.type = 'button';
+      el.setAttribute('aria-label', label);
+      el.setAttribute('aria-controls', rail.id);
+      el.textContent = symbol;
+      return el;
+    }
+    const prev = button('이전 카드', '←');
+    const next = button('다음 카드', '→');
+    const status = document.createElement('output');
+    status.setAttribute('aria-live', 'polite');
+    controls.append(prev, status, next);
+    heading.after(reader);
+    reader.append(controls, rail);
+    rail.append(...cards);
+    let current = -1;
+    function sync() {
+      const index = Math.max(0, Math.min(cards.length - 1, Math.round(rail.scrollLeft / (rail.clientWidth || 1))));
+      if (index === current) return;
+      current = index;
+      status.textContent = (index + 1) + ' / ' + cards.length;
+      prev.disabled = index === 0;
+      next.disabled = index === cards.length - 1;
+    }
+    function go(index) {
+      const target = Math.max(0, Math.min(index, cards.length - 1));
+      rail.scrollTo({ left: rail.clientWidth * target, behavior: 'instant' });
+      sync();
+    }
+    prev.addEventListener('click', () => go(current - 1));
+    next.addEventListener('click', () => go(current + 1));
+    rail.addEventListener('scroll', sync, { passive: true });
+    rail.addEventListener('keydown', event => {
+      const destinations = { ArrowRight: current + 1, ArrowLeft: current - 1, Home: 0, End: cards.length - 1 };
+      if (!(event.key in destinations)) return;
+      event.preventDefault();
+      go(destinations[event.key]);
+    });
+    window.addEventListener('resize', sync);
+    sync();
+  }
+})();
+</script>
+</body></html>
+
