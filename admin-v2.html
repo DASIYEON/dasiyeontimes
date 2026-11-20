@@ -643,6 +643,7 @@
                 <button class="toolbar-btn" onclick="insertHr()">── 구분선</button>
                 <div class="toolbar-sep"></div>
                 <button class="toolbar-btn" onclick="insertBodyImage()">🖼️ 이미지</button>
+                <button type="button" class="toolbar-btn" id="deck-open">카드뉴스 등록</button>
                 <button class="toolbar-btn" onclick="insertLink()">🔗 링크</button>
               </div>
               <div
@@ -1831,5 +1832,138 @@ JSON 형식:
     showToast('✅ 기사 가져오기 완료 — 미리보기로 확인 후 발행하세요');
   }
 </script>
+<dialog id="deck-dialog" aria-labelledby="deck-title">
+  <h2 id="deck-title">카드뉴스 등록</h2>
+  <p>세로 4:5 PNG를 권장합니다. 여러 장을 선택하고 순서와 이미지 설명을 확인하세요.</p>
+  <label>카드 이미지 선택 <input type="file" id="deck-files" multiple accept="image/png,image/jpeg,image/webp"></label>
+  <ol id="deck-list"></ol>
+  <p id="deck-message" role="status" aria-live="polite"></p>
+  <footer><button type="button" id="deck-cancel">닫기</button><button type="button" id="deck-insert">본문에 넣기</button></footer>
+</dialog>
+<style>
+#deck-dialog{width:min(560px,90vw);max-height:85vh;overflow:auto;padding:24px;color:#1f2d4e;border:0;border-radius:10px;box-shadow:0 12px 48px #17223c44;font-family:inherit}
+#deck-dialog::backdrop{background:#17223c99}
+#deck-dialog h2{margin:0 0 10px}#deck-dialog p{line-height:1.6;margin:10px 0 16px}
+#deck-files{display:block;margin:8px 0}#deck-list{padding:0;list-style:none}
+#deck-list li{display:grid;grid-template-columns:56px 1fr;column-gap:12px;border-top:1px solid #ddd;padding:10px 0}
+#deck-list img{width:56px;height:70px;object-fit:contain;grid-row:span 2}
+#deck-list input{width:100%;box-sizing:border-box}#deck-list button,#deck-dialog footer button{font:inherit;padding:5px 10px;margin:4px 4px 0 0;cursor:pointer}
+#deck-dialog footer{display:flex;justify-content:flex-end}#deck-insert{background:#1f2d4e;color:white;border:0;border-radius:4px}
+</style>
+<script>
+(() => {
+  const dialog = document.getElementById('deck-dialog');
+  const picker = document.getElementById('deck-files');
+  const list = document.getElementById('deck-list');
+  const status = document.getElementById('deck-message');
+  const insert = document.getElementById('deck-insert');
+  const cancel = document.getElementById('deck-cancel');
+  const items = [];
+  let busy = false;
+  function draw() {
+    list.replaceChildren();
+    items.forEach((item, i) => {
+      const row = document.createElement('li');
+      const thumb = document.createElement('img');
+      thumb.src = item.preview;
+      thumb.alt = '';
+      const alt = document.createElement('input');
+      alt.setAttribute('aria-label', (i+1) + '번 카드 이미지 설명');
+      alt.placeholder = '이미지 설명';
+      alt.value = item.alt;
+      alt.oninput = () => { item.alt = alt.value; };
+      const actions = document.createElement('div');
+      for (const [label, delta] of [['앞으로',-1],['뒤로',1],['제외',0]]) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = label;
+        btn.disabled = i + delta < 0 || i + delta >= items.length;
+        btn.onclick = () => {
+          items.splice(i,1);
+          if(delta) items.splice(i+delta,0,item);
+          else URL.revokeObjectURL(item.preview);
+          draw();
+        };
+        actions.append(btn);
+      }
+      row.append(thumb, alt, actions);
+      list.append(row);
+    });
+    insert.disabled = !items.length || busy;
+  }
+  document.getElementById('deck-open').onclick = () => {
+    dialog.showModal();
+    draw();
+  };
+  picker.onchange = () => {
+    const files = [...picker.files].sort((a,b)=>a.name.localeCompare(b.name,'ko',{numeric:true}));
+    picker.value = '';
+    if (files.some(f => !['image/png','image/jpeg','image/webp'].includes(f.type))) {
+      status.textContent = 'PNG, JPG 또는 WEBP 파일을 선택하세요.';
+      return;
+    }
+    for(const file of files) items.push({file,preview:URL.createObjectURL(file),alt:file.name.replace(/\.[^.]+$/,'')});
+    status.textContent = '';
+    draw();
+  };
+  cancel.onclick = () => dialog.close();
+  dialog.oncancel = event => { if(busy) event.preventDefault(); };
+  dialog.onclose = () => {
+    for(const item of items) URL.revokeObjectURL(item.preview);
+    items.length=0;
+    list.replaceChildren();
+    status.textContent='';
+  };
+  insert.onclick = async () => {
+    if (busy || !items.length) return;
+    busy=true;
+    picker.disabled=insert.disabled=cancel.disabled=true;
+    list.inert=true;
+    try {
+      const deck=document.createElement('section');
+      deck.className='news-card-deck';
+      const heading=document.createElement('h2');
+      heading.textContent='카드뉴스';
+      deck.append(heading);
+      for(const [i,item] of items.entries()) {
+        status.textContent=(i+1)+' / '+items.length+' 업로드 중';
+        if(!item.url) {
+          const result=await uploadImageToStorage(item.file);
+          if(!result.ok) throw Error(result.message);
+          item.url=result.url;
+        }
+        const figure=document.createElement('figure');
+        figure.style.cssText='max-width:640px;margin:20px auto';
+        const img=document.createElement('img');
+        img.src=item.url;
+        img.alt=item.alt.trim() || ('카드뉴스 '+(i+1));
+        img.style.cssText='display:block;width:100%;height:auto';
+        const caption=document.createElement('figcaption');
+        caption.append((i+1)+' / '+items.length+' · '+img.alt+' · ');
+        const save=document.createElement('a');
+        const url=new URL(item.url);
+        url.searchParams.set('download',item.file.name);
+        save.href=url.href;
+        save.download=item.file.name;
+        save.textContent='원본 저장';
+        caption.append(save);
+        figure.append(img,caption);
+        deck.append(figure);
+      }
+      const editor=document.getElementById('art-body');
+      editor.append(deck);
+      editor.dispatchEvent(new Event('input',{bubbles:true}));
+      dialog.close();
+    } catch(error) {
+      status.textContent='업로드를 마치지 못했습니다. 다시 시도하세요. '+error.message;
+    } finally {
+      busy=false;
+      picker.disabled=insert.disabled=cancel.disabled=false;
+      list.inert=false;
+    }
+  };
+})();
+</script>
 </body>
 </html>
+
