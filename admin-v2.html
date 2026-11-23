@@ -469,10 +469,9 @@
     }
   </script>
   <script>
-    // 로그인 체크 — 미인증 시 로그인 페이지로
-    if(sessionStorage.getItem('dt_admin') !== 'true') {
-      location.replace('admin.html');
-    }
+    // 로그인 체크 — Supabase 로그인 세션이 없으면 로그인 페이지로
+    _supabase.auth.getSession().then(({ data }) => { if(!data.session) location.replace('admin.html'); });
+    _supabase.auth.onAuthStateChange(event => { if(event === 'SIGNED_OUT') location.replace('admin.html'); });
   </script>
 </head>
 <body>
