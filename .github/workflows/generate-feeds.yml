@@ -42,6 +42,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "변경 없음 — 커밋 생략"
           else
-            git commit -m "chore: 정적 기사 페이지/sitemap/RSS 자동 갱신 ($(date +'%Y-%m-%d'))"
+            git commit -m "chore: 정적 기사 페이지/sitemap/RSS 자동 갱신 [skip netlify] ($(date +'%Y-%m-%d'))"
             git push
           fi
