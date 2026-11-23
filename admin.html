@@ -28,31 +28,36 @@
   <div class="logo">다시연 <em>타임즈</em></div>
   <div class="subtitle">Admin Access</div>
 
-  <label class="form-label">비밀번호</label>
-  <input type="password" class="form-input" id="pw" placeholder="비밀번호를 입력하세요"
+  <label class="form-label" for="email">이메일</label>
+  <input type="email" class="form-input" id="email" placeholder="관리자 이메일" autocomplete="username" style="margin-bottom:16px;"
+    onkeydown="if(event.key==='Enter') login()">
+  <label class="form-label" for="pw">비밀번호</label>
+  <input type="password" class="form-input" id="pw" placeholder="비밀번호를 입력하세요" autocomplete="current-password"
     onkeydown="if(event.key==='Enter') login()">
   <button class="login-btn" onclick="login()">로그인</button>
   <div class="error-msg" id="err"></div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  // 관리자 로그인은 Supabase 계정으로 확인한다 (비밀번호는 이 파일에 없다).
+  const _supabase = window.supabase.createClient('https://lguvdtesdetteasnniif.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndXZkdGVzZGV0dGVhc25uaWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNzk1MjUsImV4cCI6MjA5NTY1NTUyNX0.SBUdAzeAwwJ-v2CVYBPdIvTyXLePWZuthNTmWdRjwig');
   // 이미 로그인된 경우 바로 이동
-  if(sessionStorage.getItem('dt_admin') === 'true') {
-    location.replace('admin-v2.html');
-  }
-
-  function login() {
+  _supabase.auth.getSession().then(({ data }) => { if(data.session) location.replace('admin-v2.html'); });
+  let busy = false;
+  async function login() {
+    if(busy) return;
+    const email = document.getElementById('email').value.trim();
     const pw = document.getElementById('pw').value;
     const err = document.getElementById('err');
-    if(pw === 'nstar1109!') {
-      sessionStorage.setItem('dt_admin', 'true');
-      location.replace('admin-v2.html');
-    } else {
-      err.textContent = '비밀번호가 올바르지 않습니다.';
-      document.getElementById('pw').value = '';
-      document.getElementById('pw').focus();
-      setTimeout(() => err.textContent = '', 3000);
-    }
+    if(!email || !pw) { err.textContent = '이메일과 비밀번호를 입력하세요.'; return; }
+    busy = true; err.textContent = '확인 중…';
+    const { error } = await _supabase.auth.signInWithPassword({ email, password: pw });
+    busy = false;
+    if(!error) { location.replace('admin-v2.html'); return; }
+    err.textContent = error.status === 400 ? '이메일 또는 비밀번호가 올바르지 않습니다.' : '로그인하지 못했습니다. 잠시 후 다시 시도하세요.';
+    document.getElementById('pw').value = '';
+    document.getElementById('pw').focus();
   }
 </script>
 </body>
